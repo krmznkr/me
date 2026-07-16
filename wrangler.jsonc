@@ -1,0 +1,12 @@
+{
+  "name": "me",
+  "compatibility_date": "2026-07-04",
+  "workers_dev": false,
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  },
+  "routes": [
+    { "pattern": "me.krmznkr.com", "custom_domain": true }
+  ]
+}
