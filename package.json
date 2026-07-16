@@ -1,0 +1,22 @@
+{
+  "name": "me",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "@fontsource-variable/geist-mono": "^5.2.8",
+    "astro": "^5.13.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "typescript": "^5.9.2",
+    "wrangler": "^4.40.0"
+  }
+}
