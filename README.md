@@ -25,6 +25,32 @@ else is pure black. See [`src/scripts/nocturne.ts`](src/scripts/nocturne.ts).
 Built with [Astro](https://astro.build), Geist (sans) for the name and
 sentence, and Geist Mono for the small labels. Ships almost no JavaScript.
 
+## Variants
+
+### `/ascii` — character-art moon
+
+An alternate take on the same nightscape at
+[`me.krmznkr.com/ascii`](https://me.krmznkr.com/ascii): the identical 3D-lit
+moon, but rendered as monochrome **character-art** in Geist Mono instead of
+dithered pixels. See
+[`src/scripts/ascii-nocturne.ts`](src/scripts/ascii-nocturne.ts).
+
+- **Glyph, not pixel.** The scene is sampled on a monospace character grid;
+  each cell's luminance selects a glyph from a density ramp
+  (`· : - = + i c o * 0 @`, dark → light) and a matching gray. The bright limb
+  lands on `@ 0`, the terminator falls off through `c o i` into faint `- . :`
+  dust.
+- **Round on screen, not in the grid.** The moon's circle math runs in screen
+  pixels, so it stays perfectly round despite the tall (~1.3:1) glyph cells.
+- **Same restraint.** Sparse `+`/`·` stars twinkle on the sky only (masked out
+  of the hero's text band); a whisper of temporal shimmer keeps mid-tones
+  alive. DPR-aware, re-composes on resize, ~34fps, and respects
+  `prefers-reduced-motion`.
+
+It's the same idea as an image → ASCII converter, but grayscale, in our
+palette, and driven by a live moon rather than a photo. The homepage hero is
+unchanged; this is a self-contained second route.
+
 ## Develop
 
 ```sh
