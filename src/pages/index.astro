@@ -1,4 +1,5 @@
 ---
+import '@fontsource-variable/geist'
 import '@fontsource-variable/geist-mono'
 
 const title = 'krmznkr — full-stack software engineer'
@@ -7,9 +8,9 @@ const description =
 const url = 'https://me.krmznkr.com'
 
 const links = [
-  { label: 'GitHub', href: 'https://github.com/krmznkr', note: 'code' },
-  { label: 'Julian', href: 'https://julian.krmznkr.com', note: 'a calm calendar' },
-  { label: 'Life', href: 'https://life.krmznkr.com', note: 'life in weeks' },
+  { label: 'GitHub', href: 'https://github.com/krmznkr' },
+  { label: 'Julian', href: 'https://julian.krmznkr.com' },
+  { label: 'Life', href: 'https://life.krmznkr.com' },
 ]
 ---
 
@@ -21,7 +22,7 @@ const links = [
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#08090c" />
+    <meta name="theme-color" content="#060608" />
     <meta name="color-scheme" content="dark" />
 
     <link rel="canonical" href={url} />
@@ -34,136 +35,98 @@ const links = [
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={`${url}/og.svg`} />
+
+    <script is:inline>
+      document.documentElement.classList.add('js')
+    </script>
   </head>
 
   <body>
-    <canvas id="field" aria-hidden="true"></canvas>
+    <canvas id="sky" aria-hidden="true"></canvas>
+    <div class="vignette" aria-hidden="true"></div>
     <div class="grain" aria-hidden="true"></div>
 
     <main>
       <header class="topbar">
-        <span class="mark">
-          <span class="dot" aria-hidden="true"></span>
-          krmznkr
-        </span>
-        <span class="loc">[location removed] · UTC+1</span>
+        <span class="mark reveal">krmznkr</span>
+        <span class="place reveal">Open source · privacy-minded</span>
       </header>
 
-      <section class="hero">
-        <p class="eyebrow" data-type>Hey — my name is</p>
-        <h1>
-          <span class="name" data-type>krmznkr</span><span class="cursor" aria-hidden="true"></span>
-        </h1>
-        <p class="lede" data-type>
-          I'm a full-stack software engineer. I build calm,
-          careful software and share it in the open.
-        </p>
+      <div class="bottom">
+        <section class="intro">
+          <p class="kicker reveal">Hey — my name is</p>
+          <h1 class="reveal">krmznkr</h1>
+          <p class="lede reveal">
+            I'm a full-stack software engineer, building calm,
+            careful software in the open.
+          </p>
 
-        <nav class="links" aria-label="Elsewhere">
-          {
-            links.map((l) => (
-              <a href={l.href} rel="me noopener" target="_blank">
-                <span class="l-label">{l.label}</span>
-                <span class="l-note">{l.note}</span>
-                <span class="l-arrow" aria-hidden="true">→</span>
-              </a>
-            ))
-          }
-        </nav>
-      </section>
+          <nav class="links reveal" aria-label="Elsewhere">
+            {
+              links.map((l) => (
+                <a href={l.href} rel="me noopener" target="_blank">
+                  <span>{l.label}</span>
+                  <svg viewBox="0 0 12 12" width="11" height="11" aria-hidden="true">
+                    <path d="M3 9L9 3M9 3H4M9 3V8" stroke="currentColor" stroke-width="1.1" fill="none" stroke-linecap="square" />
+                  </svg>
+                </a>
+              ))
+            }
+          </nav>
+        </section>
 
-      <footer class="footer">
-        <span>Open source</span>
-        <span aria-hidden="true">·</span>
-        <a href="https://github.com/krmznkr/me" rel="noopener" target="_blank">this page</a>
-      </footer>
+        <footer class="footer reveal">
+          <span>Open source</span>
+          <span class="sep" aria-hidden="true">/</span>
+          <a href="https://github.com/krmznkr/me" rel="noopener" target="_blank">this page</a>
+        </footer>
+      </div>
     </main>
 
     <script>
-      import { startDitherField } from '../scripts/dither-field'
-
-      const canvas = document.getElementById('field') as HTMLCanvasElement | null
-      if (canvas) startDitherField(canvas)
-
-      // Progressive-enhancement typewriter. Text is already in the DOM for
-      // no-JS / crawlers; here we clear it and type it back out.
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      const nodes = Array.from(
-        document.querySelectorAll<HTMLElement>('[data-type]'),
+      import { startNocturne } from '../scripts/nocturne'
+      const canvas = document.getElementById('sky') as HTMLCanvasElement | null
+      if (canvas) startNocturne(canvas)
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() =>
+          document.documentElement.classList.add('ready'),
+        ),
       )
-      const cursor = document.querySelector<HTMLElement>('.cursor')
-
-      if (reduce || nodes.length === 0) {
-        document.body.classList.add('typed')
-      } else {
-        const items = nodes.map((el) => ({ el, text: el.textContent ?? '' }))
-        for (const it of items) it.el.textContent = ''
-
-        const typeInto = (el: HTMLElement, text: string) =>
-          new Promise<void>((resolve) => {
-            let i = 0
-            const step = () => {
-              el.textContent = text.slice(0, i)
-              if (i++ <= text.length) {
-                const ch = text[i - 2] ?? ''
-                const pause =
-                  ch === '.' || ch === ',' ? 150 : 18 + Math.random() * 42
-                window.setTimeout(step, pause)
-              } else {
-                resolve()
-              }
-            }
-            step()
-          })
-
-        const wait = (ms: number) =>
-          new Promise((r) => window.setTimeout(r, Math.max(0, ms)))
-
-        const run = async () => {
-          for (const it of items) {
-            await typeInto(it.el, it.text)
-            await wait(200)
-          }
-          document.body.classList.add('typed')
-          cursor?.classList.add('rest')
-        }
-        void run()
-      }
     </script>
 
     <style is:global>
       :root {
-        --bg: #08090c;
-        --fg: #e7e9f0;
-        --muted: #8b8f9c;
-        --faint: #4a4d57;
-        --line: rgba(231, 233, 240, 0.1);
+        --bg: #060608;
+        --ink: #edecea;
+        --soft: #b9b8bd;
+        --muted: #83838c;
+        --faint: #4c4c55;
+        --line: rgba(237, 236, 234, 0.14);
+        --sans: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
+        --mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
         color-scheme: dark;
       }
 
       * {
         box-sizing: border-box;
       }
-
       html,
       body {
         margin: 0;
         padding: 0;
         height: 100%;
       }
-
       body {
         background: var(--bg);
-        color: var(--fg);
-        font-family: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo,
-          monospace;
+        color: var(--ink);
+        font-family: var(--sans);
         -webkit-font-smoothing: antialiased;
         text-rendering: optimizeLegibility;
         overflow: hidden;
         min-height: 100dvh;
       }
 
-      #field {
+      #sky {
         position: fixed;
         inset: 0;
         width: 100%;
@@ -172,27 +135,26 @@ const links = [
         z-index: 0;
       }
 
-      /* Soft vignette + faint scanlines layered over the pixels for depth. */
-      .grain {
+      /* Draw the eye down-left and deepen the corners. */
+      .vignette {
         position: fixed;
         inset: 0;
         z-index: 1;
         pointer-events: none;
-        background:
-          radial-gradient(
-            120% 90% at 50% 42%,
-            transparent 40%,
-            rgba(0, 0, 0, 0.35) 82%,
-            rgba(0, 0, 0, 0.72) 100%
-          ),
-          repeating-linear-gradient(
-            0deg,
-            rgba(0, 0, 0, 0.16) 0px,
-            rgba(0, 0, 0, 0.16) 1px,
-            transparent 1px,
-            transparent 3px
-          );
-        mix-blend-mode: multiply;
+        background: radial-gradient(
+          130% 110% at 62% 30%,
+          transparent 48%,
+          rgba(0, 0, 0, 0.55) 100%
+        );
+      }
+      /* A whisper of film grain for texture. */
+      .grain {
+        position: fixed;
+        inset: -50%;
+        z-index: 1;
+        pointer-events: none;
+        opacity: 0.035;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
       }
 
       main {
@@ -200,162 +162,113 @@ const links = [
         z-index: 2;
         display: flex;
         flex-direction: column;
+        justify-content: space-between;
         min-height: 100dvh;
-        padding: clamp(1.25rem, 4vw, 3rem);
-        padding-top: max(clamp(1.25rem, 4vw, 3rem), env(safe-area-inset-top));
-        padding-bottom: max(
-          clamp(1.25rem, 4vw, 3rem),
-          env(safe-area-inset-bottom)
-        );
+        padding: clamp(1.4rem, 3.5vw, 3.25rem);
+        padding-top: max(clamp(1.4rem, 3.5vw, 3.25rem), env(safe-area-inset-top));
+        padding-bottom: max(clamp(1.4rem, 3.5vw, 3.25rem), env(safe-area-inset-bottom));
       }
 
       .topbar {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: baseline;
+        font-family: var(--mono);
         font-size: 0.72rem;
-        letter-spacing: 0.18em;
+        letter-spacing: 0.16em;
         text-transform: uppercase;
-        color: var(--muted);
       }
-
       .mark {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.55em;
-        color: var(--fg);
+        color: var(--ink);
       }
-
-      .dot {
-        width: 7px;
-        height: 7px;
-        background: var(--fg);
-        box-shadow: 0 0 0 2px rgba(231, 233, 240, 0.12);
-        animation: blink 3.4s steps(1) infinite;
-      }
-
-      .loc {
+      .place {
         color: var(--faint);
       }
 
-      .hero {
-        margin: auto 0;
-        max-width: 46ch;
-        text-shadow: 0 1px 18px rgba(0, 0, 0, 0.45);
+      .bottom {
+        display: flex;
+        flex-direction: column;
+        gap: clamp(2rem, 5vh, 3.5rem);
       }
 
-      .eyebrow {
-        margin: 0 0 0.9rem;
-        min-height: 1.2em;
-        font-size: clamp(0.8rem, 2.2vw, 1rem);
-        letter-spacing: 0.14em;
+      .intro {
+        max-width: 40rem;
+      }
+
+      .kicker {
+        margin: 0 0 1.1rem;
+        font-family: var(--mono);
+        font-size: clamp(0.72rem, 1.6vw, 0.82rem);
+        letter-spacing: 0.22em;
         text-transform: uppercase;
         color: var(--muted);
       }
 
       h1 {
         margin: 0;
-        font-weight: 500;
-        line-height: 1;
-        letter-spacing: -0.02em;
-        font-size: clamp(3.1rem, 15vw, 8.5rem);
-        white-space: nowrap;
-      }
-
-      .name {
-        background: linear-gradient(
-          180deg,
-          #ffffff 0%,
-          #c7cad4 55%,
-          #8b8f9c 100%
-        );
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        text-shadow: none;
-      }
-
-      .cursor {
-        display: inline-block;
-        width: 0.46em;
-        height: 0.72em;
-        margin-left: 0.12em;
-        vertical-align: -0.04em;
-        background: var(--fg);
-        animation: blink 1.05s steps(1) infinite;
-      }
-      .cursor.rest {
-        animation: blink 1.15s steps(1) infinite;
-        opacity: 0.55;
+        font-family: var(--sans);
+        font-weight: 600;
+        line-height: 0.95;
+        letter-spacing: -0.035em;
+        font-size: clamp(2.7rem, 9vw, 5rem);
+        color: #f6f5f3;
       }
 
       .lede {
-        margin: 1.6rem 0 0;
-        max-width: 42ch;
-        min-height: 1.2em;
-        font-size: clamp(1rem, 3.2vw, 1.2rem);
-        line-height: 1.6;
-        color: #b9bcc7;
+        margin: 1.5rem 0 0;
+        max-width: 40ch;
+        font-size: clamp(1rem, 2.3vw, 1.2rem);
+        line-height: 1.62;
+        color: var(--soft);
+        font-weight: 350;
       }
 
       .links {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.55rem;
-        margin-top: 2.2rem;
-        opacity: 0;
-        transform: translateY(8px);
-        transition:
-          opacity 0.8s ease,
-          transform 0.8s ease;
+        gap: 1.6rem;
+        margin-top: 2.4rem;
+        font-family: var(--mono);
+        font-size: 0.8rem;
+        letter-spacing: 0.04em;
       }
-      body.typed .links {
-        opacity: 1;
-        transform: none;
-      }
-
       .links a {
         display: inline-flex;
-        align-items: baseline;
-        gap: 0.6em;
-        padding: 0.55rem 0.85rem;
-        border: 1px solid var(--line);
-        background: rgba(10, 11, 15, 0.35);
-        backdrop-filter: blur(3px);
-        color: var(--fg);
+        align-items: center;
+        gap: 0.5em;
+        color: var(--soft);
         text-decoration: none;
-        font-size: 0.9rem;
+        padding-bottom: 0.35em;
+        border-bottom: 1px solid transparent;
         transition:
-          border-color 0.25s ease,
-          background 0.25s ease,
-          transform 0.25s ease;
+          color 0.3s ease,
+          border-color 0.3s ease;
+      }
+      .links a svg {
+        color: var(--faint);
+        transition:
+          transform 0.3s ease,
+          color 0.3s ease;
       }
       .links a:hover,
       .links a:focus-visible {
-        border-color: rgba(231, 233, 240, 0.55);
-        background: rgba(231, 233, 240, 0.06);
-        transform: translateY(-2px);
+        color: var(--ink);
+        border-color: var(--line);
         outline: none;
       }
-      .l-note {
-        color: var(--muted);
-        font-size: 0.78rem;
-      }
-      .l-arrow {
-        color: var(--muted);
-        transition: transform 0.25s ease;
-      }
-      .links a:hover .l-arrow {
-        transform: translateX(3px);
-        color: var(--fg);
+      .links a:hover svg,
+      .links a:focus-visible svg {
+        color: var(--ink);
+        transform: translate(2px, -2px);
       }
 
       .footer {
         display: flex;
-        gap: 0.6em;
         align-items: center;
-        font-size: 0.72rem;
-        letter-spacing: 0.14em;
+        gap: 0.7em;
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.16em;
         text-transform: uppercase;
         color: var(--faint);
       }
@@ -363,46 +276,57 @@ const links = [
         color: var(--muted);
         text-decoration: none;
         border-bottom: 1px solid transparent;
+        transition: color 0.3s ease, border-color 0.3s ease;
       }
       .footer a:hover {
-        color: var(--fg);
+        color: var(--ink);
         border-color: var(--line);
       }
+      .sep {
+        color: var(--faint);
+      }
 
-      @keyframes blink {
-        0%,
-        45% {
-          opacity: 1;
-        }
-        50%,
-        95% {
-          opacity: 0;
-        }
-        100% {
-          opacity: 1;
-        }
+      /* Staggered reveal — only when JS is present; text is visible otherwise. */
+      html.js .reveal {
+        opacity: 0;
+        transform: translateY(14px);
+        transition:
+          opacity 0.95s cubic-bezier(0.2, 0.65, 0.2, 1),
+          transform 0.95s cubic-bezier(0.2, 0.65, 0.2, 1);
+      }
+      html.js.ready .reveal {
+        opacity: 1;
+        transform: none;
+      }
+      html.js .topbar .reveal {
+        transition-delay: 0.05s;
+      }
+      html.js .kicker.reveal {
+        transition-delay: 0.35s;
+      }
+      html.js h1.reveal {
+        transition-delay: 0.46s;
+      }
+      html.js .lede.reveal {
+        transition-delay: 0.6s;
+      }
+      html.js .links.reveal {
+        transition-delay: 0.76s;
+      }
+      html.js .footer.reveal {
+        transition-delay: 0.9s;
       }
 
       @media (prefers-reduced-motion: reduce) {
-        .dot,
-        .cursor {
-          animation: none;
-        }
-        .links {
-          opacity: 1;
-          transform: none;
-          transition: none;
+        html.js .reveal {
+          opacity: 1 !important;
+          transform: none !important;
+          transition: none !important;
         }
       }
 
-      @media (max-width: 520px) {
-        .loc {
-          display: none;
-        }
-      }
-
-      @media (max-width: 420px) {
-        .l-note {
+      @media (max-width: 460px) {
+        .place {
           display: none;
         }
       }

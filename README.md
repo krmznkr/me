@@ -8,18 +8,22 @@ Live at [`me.krmznkr.com`](https://me.krmznkr.com).
 
 ## Design
 
-- **Monochrome pixel art.** The background is computed at a low resolution,
-  passed through an 8×8 Bayer matrix so a few gray levels read as a flowing
-  gradient, then blitted to the screen with smoothing disabled so every pixel
-  stays crisp. See [`src/scripts/dither-field.ts`](src/scripts/dither-field.ts).
-- **Every aspect ratio.** The canvas is DPR-aware and re-tiles on resize; the
-  layout is fluid from tall phones to ultrawide displays.
-- **Calm by default.** The greeting types itself out, but respects
-  `prefers-reduced-motion` and pauses when the tab is hidden. With JavaScript
-  off, the full text is still present in the HTML.
+A quiet monochrome nightscape rendered as chunky pixel art on an HTML canvas:
+one side-lit, ordered-dithered (8×8 Bayer) moon with a soft halo, a sparse
+scatter of slowly breathing stars, and a whisper of film grain — everything
+else is pure black. See [`src/scripts/nocturne.ts`](src/scripts/nocturne.ts).
 
-Built with [Astro](https://astro.build) and Geist Mono. Ships almost no
-JavaScript — just the canvas engine and the typewriter.
+- **The art is a subject, not a texture.** The moon is placed with intent
+  (off-centre in landscape, high-centre in portrait) so the type always keeps
+  its own dark, high-contrast space. No noise behind the words.
+- **Every aspect ratio.** The canvas is DPR-aware and re-composes on resize;
+  the layout is fluid from tall phones to ultrawide displays.
+- **Calm by default.** Motion is slow and respects `prefers-reduced-motion`;
+  the scene pauses when the tab is hidden. The greeting fades up on load but is
+  fully present in the HTML without JavaScript.
+
+Built with [Astro](https://astro.build), Geist (sans) for the name and
+sentence, and Geist Mono for the small labels. Ships almost no JavaScript.
 
 ## Develop
 
