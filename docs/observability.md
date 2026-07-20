@@ -41,6 +41,16 @@ The project token in `src/scripts/posthog.ts` is a public ingestion identifier.
 The personal API key is secret and must never be committed or copied into GitHub
 Actions. Sentry remains the error tracker and source-map destination.
 
+Me records `outbound_link_clicked` for the four explicitly tagged external
+links. It sends only a static `destination` label: `github`, `julian`, `life`,
+or `source`. Link text and destination URLs are not captured as custom
+properties. The shared
+[Apps · Traffic & Engagement dashboard](https://eu.posthog.com/project/228794/dashboard/836241)
+shows rolling 30-day pageviews, sanitized paths, referrers, and key interactions
+for all three apps. Every query is restricted to `environment=production` and
+can be narrowed with the `app` property. Because persistence is disabled, the
+dashboard intentionally avoids stable-user and unique-visitor metrics.
+
 ## Releases and source maps
 
 The Deploy workflow supplies two build-only environment variables:
