@@ -13,10 +13,12 @@
   "dependencies": {
     "@fontsource-variable/geist": "^5.2.9",
     "@fontsource-variable/geist-mono": "^5.2.8",
+    "@sentry/browser": "^10.66.0",
     "astro": "^5.13.5"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
+    "@sentry/vite-plugin": "^5.4.0",
     "typescript": "^5.9.2",
     "wrangler": "^4.40.0"
   }
