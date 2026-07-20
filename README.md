@@ -50,8 +50,16 @@ pnpm build
 
 Production is deployed as the `me` Cloudflare Worker (static assets) at
 `https://me.krmznkr.com`. Pushes to `main` deploy automatically via the Deploy
-GitHub Actions workflow (wrangler, using the `CLOUDFLARE_API_TOKEN` repository
-secret).
+GitHub Actions workflow. The build publishes a Sentry release and source maps
+before wrangler deploys with the `CLOUDFLARE_API_TOKEN` repository secret.
+
+## Observability
+
+Production errors, performance traces, and privacy-filtered session replays are
+sent to the `me` project in the `krmznkr` Sentry organization. CLI
+authentication is provided by 1Password; no Sentry auth token belongs in the
+repository. See [`docs/observability.md`](docs/observability.md) for the runtime
+settings, release pipeline, verification commands, and token-rotation runbook.
 
 ## License
 
