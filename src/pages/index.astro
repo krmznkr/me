@@ -85,6 +85,7 @@ const links = [
 
     <script>
       import '../scripts/sentry'
+      import '../scripts/posthog'
       import { startNocturne } from '../scripts/nocturne'
       const canvas = document.getElementById('sky') as HTMLCanvasElement | null
       if (canvas) startNocturne(canvas)

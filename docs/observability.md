@@ -19,6 +19,28 @@ Unhandled browser errors and promise rejections are captured by the SDK. The
 DSN in `src/scripts/sentry.ts` is a public client identifier. It is safe to ship
 in the browser bundle and must not be treated like an API token.
 
+## PostHog traffic analytics
+
+`src/scripts/posthog.ts` lazily loads PostHog's slim browser bundle in
+production only. It sends page views and page leaves to the EU-hosted
+`krmznkr apps` project (project ID `228794`) with `app=me` and
+`environment=production` on every event. One shared project is intentional: the
+free plan supports one project, so each app is separated by the `app` property
+without adding billing.
+
+The integration is deliberately cookieless and content-minimizing:
+
+- persistence, person identification, autocapture, session recording, surveys,
+  heatmaps, exception capture, dead-click capture, performance capture, and
+  feature-flag requests are disabled;
+- browser Do Not Track is respected;
+- text and sensitive element attributes are masked; and
+- query strings and URL fragments are removed from current and referrer URLs.
+
+The project token in `src/scripts/posthog.ts` is a public ingestion identifier.
+The personal API key is secret and must never be committed or copied into GitHub
+Actions. Sentry remains the error tracker and source-map destination.
+
 ## Releases and source maps
 
 The Deploy workflow supplies two build-only environment variables:
@@ -31,8 +53,8 @@ its commits, generates hidden source maps, uploads an artifact bundle, and
 deletes the map files from `dist` before Cloudflare deployment. Local builds do
 not upload anything because they do not normally receive the token.
 
-The GitHub App is installed only for the `julian`, `life`, and `me`
-repositories.
+The Sentry GitHub App is installed only for the `julian`, `life`, and `me`
+repositories. The PostHog EU GitHub App has the same repository restriction.
 
 ## CLI access
 
@@ -48,6 +70,16 @@ sentry-cli releases list --show-projects
 The committed `.sentryclirc` contains only the non-secret organization, project,
 and SaaS URL defaults.
 
+PostHog CLI `0.8.4` is installed globally. The `posthog-cli` shell function in
+`~/.zshrc` reads the credential from the Private-vault item
+`PostHog (krmznkr)` and supplies the EU host and shared project ID without
+persisting the key. In a new interactive shell, verify it with:
+
+```sh
+posthog-cli --version
+posthog-cli api call --json project-get '{}'
+```
+
 ## Verify the integration
 
 After a push to `main`:
@@ -56,6 +88,8 @@ After a push to `main`:
 2. Check that the commit SHA appears under Sentry Releases for `me`.
 3. Confirm the Deploy log says that source maps were uploaded successfully.
 4. Check the Sentry Issues feed after exercising the deployed application.
+5. Open [PostHog Activity](https://eu.posthog.com/project/228794/activity/explore)
+   or Web analytics, filter `app` to `me`, and confirm `$pageview` events.
 
 The initial installation was verified with the issue `ME-1`, titled
 `Sentry setup verification`.
@@ -81,3 +115,16 @@ unset sentry_token_value
 
 Verify `sentry-cli info` in a new shell, run one deployment, and revoke the old
 token only after the new release and source-map upload succeed.
+
+For PostHog, create a replacement personal key with the `Agent CLI` preset and
+access to all projects in the `krmznkr` organization. Store it without printing
+it, verify the CLI, and only then revoke the previous key:
+
+```zsh
+read -rs "posthog_token_value?New PostHog token: "
+echo
+op item edit "PostHog (krmznkr)" --vault Private \
+  "credential[password]=$posthog_token_value" >/dev/null
+unset posthog_token_value
+posthog-cli api call --json project-get '{}'
+```

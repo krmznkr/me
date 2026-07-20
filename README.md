@@ -55,11 +55,12 @@ before wrangler deploys with the `CLOUDFLARE_API_TOKEN` repository secret.
 
 ## Observability
 
-Production errors, performance traces, and privacy-filtered session replays are
-sent to the `me` project in the `krmznkr` Sentry organization. CLI
-authentication is provided by 1Password; no Sentry auth token belongs in the
-repository. See [`docs/observability.md`](docs/observability.md) for the runtime
-settings, release pipeline, verification commands, and token-rotation runbook.
+Sentry handles production errors, traces, releases, and privacy-filtered replay.
+PostHog provides privacy-first page traffic in the shared EU `krmznkr apps`
+project, separated with `app=me`. CLI credentials live in 1Password; no personal
+API token belongs in the repository. See
+[`docs/observability.md`](docs/observability.md) for runtime controls,
+verification commands, and token-rotation runbooks.
 
 ## License
 
