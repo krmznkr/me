@@ -52,8 +52,16 @@ async function initializePostHog() {
       }
     },
   })
+
+  return posthog
 }
 
-if (import.meta.env.PROD) {
-  void initializePostHog().catch(() => undefined)
+const postHogClient = import.meta.env.PROD
+  ? initializePostHog().catch(() => null)
+  : Promise.resolve(null)
+
+export function capturePostHogEvent(event: string, properties?: Record<string, unknown>) {
+  void postHogClient
+    .then((posthog) => posthog?.capture(event, properties))
+    .catch(() => undefined)
 }

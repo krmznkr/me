@@ -64,7 +64,12 @@ const links = [
           <nav class="links reveal" aria-label="Elsewhere">
             {
               links.map((l) => (
-                <a href={l.href} rel="me noopener" target="_blank">
+                <a
+                  href={l.href}
+                  rel="me noopener"
+                  target="_blank"
+                  data-analytics-destination={l.label.toLowerCase()}
+                >
                   <span>{l.label}</span>
                   <svg viewBox="0 0 12 12" width="11" height="11" aria-hidden="true">
                     <path d="M3 9L9 3M9 3H4M9 3V8" stroke="currentColor" stroke-width="1.1" fill="none" stroke-linecap="square" />
@@ -78,15 +83,31 @@ const links = [
         <footer class="footer reveal">
           <span>Open source</span>
           <span class="sep" aria-hidden="true">/</span>
-          <a href="https://github.com/krmznkr/me" rel="noopener" target="_blank">this page</a>
+          <a
+            href="https://github.com/krmznkr/me"
+            rel="noopener"
+            target="_blank"
+            data-analytics-destination="source"
+          >this page</a>
         </footer>
       </div>
     </main>
 
     <script>
       import '../scripts/sentry'
-      import '../scripts/posthog'
+      import { capturePostHogEvent } from '../scripts/posthog'
       import { startNocturne } from '../scripts/nocturne'
+      document.addEventListener('click', (event) => {
+        const target = event.target
+        if (!(target instanceof Element)) return
+
+        const link = target.closest<HTMLAnchorElement>('a[data-analytics-destination]')
+        if (!link) return
+
+        capturePostHogEvent('outbound_link_clicked', {
+          destination: link.dataset.analyticsDestination,
+        })
+      })
       const canvas = document.getElementById('sky') as HTMLCanvasElement | null
       if (canvas) startNocturne(canvas)
       requestAnimationFrame(() =>
