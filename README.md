@@ -1,8 +1,8 @@
 # me
 
 A single, quiet homepage for the `krmznkr` identity: a full-stack software
-engineer. It renders a monochrome moon as character-art on an
-HTML canvas and links out to open-source work.
+engineer building in the open. It renders a monochrome moon as character-art on
+an HTML canvas and links out to open-source work.
 
 Live at [`me.krmznkr.com`](https://me.krmznkr.com).
 

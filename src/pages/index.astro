@@ -15,7 +15,7 @@ const links = [
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="js">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -36,9 +36,14 @@ const links = [
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={`${url}/og.svg`} />
 
-    <script is:inline>
-      document.documentElement.classList.add('js')
-    </script>
+    <noscript>
+      <style>
+        html.js .reveal {
+          opacity: 1;
+          transform: none;
+        }
+      </style>
+    </noscript>
   </head>
 
   <body>
@@ -57,8 +62,8 @@ const links = [
           <p class="kicker reveal">Hey — my name is</p>
           <h1 class="reveal">krmznkr</h1>
           <p class="lede reveal">
-            I'm a full-stack software engineer, building calm,
-            careful software in the open.
+            I'm a full-stack software engineer building calm, careful software
+            in the open.
           </p>
 
           <nav class="links reveal" aria-label="Elsewhere">
@@ -309,7 +314,9 @@ const links = [
         color: var(--faint);
       }
 
-      /* Staggered reveal — only when JS is present; text is visible otherwise. */
+      /* Staggered reveal. The hidden start state lives in render-blocking CSS
+         so content never paints visible and then flashes hidden. A <noscript>
+         override below keeps everything visible when JS is unavailable. */
       html.js .reveal {
         opacity: 0;
         transform: translateY(14px);

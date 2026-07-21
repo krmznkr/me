@@ -34,6 +34,9 @@ export default defineConfig({
     plugins: [sentryPlugin],
     build: {
       sourcemap: sentryPlugin ? 'hidden' : false,
+      // Keep every script external so the strict CSP (script-src 'self')
+      // never has to allow inline scripts.
+      assetsInlineLimit: 0,
     },
   },
 })
