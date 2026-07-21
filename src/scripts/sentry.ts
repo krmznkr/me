@@ -44,5 +44,27 @@ if (import.meta.env.PROD) {
           }
         : undefined,
     }),
+    beforeSendSpan: (span) => {
+      if (typeof span.description === 'string') {
+        span.description = pathOnly(span.description)
+      }
+      if (span.data) {
+        for (const key of [
+          'http.url',
+          'http.query',
+          'http.fragment',
+          'url.query',
+          'url.fragment',
+          'url.full',
+        ]) {
+          if (key in span.data) delete span.data[key]
+        }
+        const full = span.data['url.path'] ?? span.data['server.address']
+        if (typeof full === 'string') {
+          span.data['url.path'] = pathOnly(full)
+        }
+      }
+      return span
+    },
   })
 }

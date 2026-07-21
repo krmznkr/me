@@ -15,7 +15,7 @@ const links = [
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="js">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -36,6 +36,14 @@ const links = [
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={`${url}/og.svg`} />
 
+    <noscript>
+      <style>
+        html.js .reveal {
+          opacity: 1;
+          transform: none;
+        }
+      </style>
+    </noscript>
   </head>
 
   <body>
@@ -94,7 +102,6 @@ const links = [
       import '../scripts/sentry'
       import { capturePostHogEvent } from '../scripts/posthog'
       import { startNocturne } from '../scripts/nocturne'
-      document.documentElement.classList.add('js')
       document.addEventListener('click', (event) => {
         const target = event.target
         if (!(target instanceof Element)) return
@@ -307,7 +314,9 @@ const links = [
         color: var(--faint);
       }
 
-      /* Staggered reveal — only when JS is present; text is visible otherwise. */
+      /* Staggered reveal. The hidden start state lives in render-blocking CSS
+         so content never paints visible and then flashes hidden. A <noscript>
+         override below keeps everything visible when JS is unavailable. */
       html.js .reveal {
         opacity: 0;
         transform: translateY(14px);
