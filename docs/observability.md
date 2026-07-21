@@ -1,7 +1,7 @@
 # Observability
 
 Me uses [Sentry](https://krmznkr.sentry.io/) for production browser error
-tracking, performance traces, session replay, releases, and source maps. The
+tracking, sampled performance traces, releases, and source maps. The
 Sentry project slug is `me` in the `krmznkr` organization.
 
 ## Runtime monitoring
@@ -10,10 +10,10 @@ Sentry project slug is `me` in the `krmznkr` organization.
 builds. The current data controls are:
 
 - default personally identifiable information is not sent;
-- replay masks all text and blocks all media;
-- 20% of performance traces are sampled;
-- 5% of ordinary sessions are eligible for replay; and
-- sessions containing an error are eligible for replay.
+- session replay is disabled;
+- 5% of performance traces are sampled; and
+- request query strings, cookies, headers, bodies, and user objects are removed
+  before errors or transactions are sent.
 
 Unhandled browser errors and promise rejections are captured by the SDK. The
 DSN in `src/scripts/sentry.ts` is a public client identifier. It is safe to ship

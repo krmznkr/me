@@ -36,9 +36,6 @@ const links = [
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={`${url}/og.svg`} />
 
-    <script is:inline>
-      document.documentElement.classList.add('js')
-    </script>
   </head>
 
   <body>
@@ -57,8 +54,8 @@ const links = [
           <p class="kicker reveal">Hey — my name is</p>
           <h1 class="reveal">krmznkr</h1>
           <p class="lede reveal">
-            I'm a full-stack software engineer, building calm,
-            careful software in the open.
+            I'm a full-stack software engineer building calm, careful software
+            in the open.
           </p>
 
           <nav class="links reveal" aria-label="Elsewhere">
@@ -97,6 +94,7 @@ const links = [
       import '../scripts/sentry'
       import { capturePostHogEvent } from '../scripts/posthog'
       import { startNocturne } from '../scripts/nocturne'
+      document.documentElement.classList.add('js')
       document.addEventListener('click', (event) => {
         const target = event.target
         if (!(target instanceof Element)) return
