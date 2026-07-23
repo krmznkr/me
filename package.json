@@ -21,6 +21,6 @@
     "@astrojs/check": "^0.9.4",
     "@sentry/vite-plugin": "^5.4.0",
     "typescript": "^5.9.2",
-    "wrangler": "^4.112.0"
+    "wrangler": "^4.113.0"
   }
 }
