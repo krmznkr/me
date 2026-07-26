@@ -55,12 +55,26 @@ before wrangler deploys with the `CLOUDFLARE_API_TOKEN` repository secret.
 
 ## Observability
 
-Sentry handles production errors, traces, releases, and privacy-filtered replay.
+Sentry handles production errors, sampled traces, releases, and source maps.
 PostHog provides privacy-first page traffic in the shared EU `krmznkr apps`
 project, separated with `app=me`. CLI credentials live in 1Password; no personal
 API token belongs in the repository. See
 [`docs/observability.md`](docs/observability.md) for runtime controls,
 verification commands, and token-rotation runbooks.
+
+## Documentation
+
+- [`docs/README.md`](docs/README.md) — documentation map and ownership.
+- [`docs/architecture.md`](docs/architecture.md) — page composition, character
+  renderer, runtime boundaries, deployment, observability, and failure
+  behavior.
+- [`docs/development.md`](docs/development.md) — toolchain, change map, visual
+  verification, privacy boundary, and delivery.
+- [`docs/observability.md`](docs/observability.md) — telemetry controls,
+  release verification, and credential rotation.
+- [`docs/roadmap.md`](docs/roadmap.md) — visual, accessibility, performance,
+  and deployment-assurance gaps.
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) — checks and contribution guardrails.
 
 ## License
 
