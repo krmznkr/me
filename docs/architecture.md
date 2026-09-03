@@ -1,9 +1,9 @@
 # Architecture
 
-`me` is a static Astro site with one page and a small client-side character-art
-renderer. Astro produces the document shell, metadata, styles, and link content
-at build time; the browser runs the moon animation and production-only
-observability integrations.
+`me` is a static Astro site with one page and a client-side Three.js scene.
+Astro produces the document shell, metadata, styles, and link content at build
+time; the browser loads the Hyperion model, runs its animation, and initializes
+production-only observability integrations.
 
 ## System context
 
@@ -12,13 +12,13 @@ flowchart LR
   visitor["Browser"]
   edge["Cloudflare Worker<br/>static asset binding"]
   html["Prebuilt Astro HTML + CSS"]
-  nocturne["Nocturne canvas renderer"]
+  hyperion["Hyperion WebGL renderer"]
   sentry["Sentry EU"]
   posthog["PostHog EU"]
   external["GitHub · Julian · Life"]
 
   visitor -->|"HTTPS"| edge --> html
-  html --> nocturne
+  html --> hyperion
   visitor -->|"explicit link clicks"| external
   visitor -. errors and sampled traces .-> sentry
   visitor -. page traffic + static destination labels .-> posthog
@@ -27,7 +27,7 @@ flowchart LR
   classDef edgeNode fill:#ede9fe,stroke:#7c3aed,color:#3b0764
   classDef externalNode fill:#fef3c7,stroke:#d97706,color:#78350f
   class visitor client
-  class edge,html,nocturne edgeNode
+  class edge,html,hyperion edgeNode
   class sentry,posthog,external externalNode
 ```
 
@@ -46,7 +46,7 @@ flowchart TD
   boot["Client boot script"]
   sentry["Initialize Sentry in production"]
   posthog["Lazy-load PostHog in production"]
-  canvas["startNocturne(canvas)"]
+  canvas["Import and startHyperion(canvas)"]
   reveal["Add ready class after two frames"]
 
   page --> metadata
@@ -63,40 +63,40 @@ The meaningful text and links are present in the initial HTML. JavaScript adds
 the decorative canvas, telemetry, outbound-link events, and staggered reveal;
 the content does not depend on those enhancements.
 
-## Nocturne render pipeline
+## Hyperion render pipeline
 
 ```mermaid
 flowchart TD
-  start["startNocturne"]
-  wait["Wait for document fonts"]
-  size["Measure viewport, DPR,<br/>glyph cell, rows, and columns"]
-  compose["Choose moon position/radius<br/>for portrait or landscape"]
-  stars["Seed deterministic stars<br/>outside moon and text band"]
+  start["startHyperion"]
+  setup["Create WebGL renderer,<br/>camera, fog, and environment"]
+  load["Load hyperion.glb"]
+  model["Orient, fit, desaturate,<br/>and add structural edges"]
+  compose["Choose camera and ship transform<br/>for portrait or landscape"]
+  stars["Seed deterministic 3D stars"]
   motion{"Reduced motion?"}
-  frame["~34 fps animation loop"]
-  sample["For every glyph cell:<br/>sphere normal + light + noise + glow"]
-  glyph["Map luminance to<br/>glyph density and grayscale"]
-  paint["Paint moon and stars"]
-  static["Render one static frame"]
+  frame["Animation frame loop"]
+  input["Ease toward pointer,<br/>drag, and drift transforms"]
+  paint["Render scene"]
+  static["Render without automatic drift"]
 
-  start --> wait --> size --> compose --> stars --> motion
+  start --> setup --> load --> model --> compose --> stars --> motion
   motion -->|"yes"| static
-  motion -->|"no"| frame --> sample --> glyph --> paint --> frame
+  motion -->|"no"| frame --> input --> paint --> frame
 ```
 
 ### Geometry and lifecycle
 
-- Canvas backing dimensions are device-pixel-ratio aware, capped at DPR 2.
-- Moon geometry is calculated in CSS pixels, so the subject stays circular even
-  though monospace cells are taller than they are wide.
-- The random star field uses a fixed seed, making recomposition deterministic
-  for the same grid dimensions.
-- A debounced resize rebuilds the grid, moon composition, and star field.
+- Device pixel ratio is capped at 1.75 on desktop and 1.35 on small screens.
+- The model is oriented from its longest axis, centered, fitted to a stable
+  scene length, and rendered with restrained metallic materials and edge lines.
+- The random star field uses a fixed seed, so its composition is deterministic.
+- Resize changes the camera and ship transform for portrait or landscape.
 - Animation pauses while the document is hidden and resumes when visible.
-- A `prefers-reduced-motion` change switches between the loop and a static
-  frame.
-- The returned cleanup function removes listeners and cancels the frame, even
-  though the current one-page lifecycle never needs to call it.
+- `prefers-reduced-motion` disables drift, and a visible control lets other
+  visitors pause or resume it.
+- Pointer position adds subtle parallax; dragging directly rotates the model.
+- The returned handle removes listeners, cancels the frame, and disposes the
+  renderer, even though the current one-page lifecycle does not call it.
 
 ## Build and deployment
 
@@ -149,8 +149,8 @@ tagged anchor; it does not send link text or URL as a custom property. See
 | Failure | Result |
 | --- | --- |
 | JavaScript disabled or canvas unavailable | All text and links remain; the decorative scene is absent |
-| Web font load fails | Canvas measures and renders with its monospace fallback |
-| Reduced motion requested | One static character-art frame |
+| Model or WebGL initialization fails | The dark CSS atmosphere remains behind the content |
+| Reduced motion requested | The 3D scene renders without automatic drift |
 | Tab hidden | Animation frame loop pauses |
 | Sentry/PostHog unavailable | Page and canvas continue |
 | Deploy workflow fails | Previous Cloudflare Worker deployment remains active |
@@ -160,7 +160,7 @@ tagged anchor; it does not send link text or URL as a custom property. See
 | Change | Primary files |
 | --- | --- |
 | Copy, links, metadata, layout, styling | `src/pages/index.astro` |
-| Moon, star, noise, motion, and responsive composition | `src/scripts/nocturne.ts` |
+| Ship, stars, lighting, motion, and responsive composition | `src/scripts/hyperion.ts`, `public/models/hyperion.glb` |
 | Error/performance monitoring | `src/scripts/sentry.ts` |
 | Traffic and outbound-link analytics | `src/scripts/posthog.ts` |
 | Build output and source maps | `astro.config.mjs` |

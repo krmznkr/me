@@ -1,7 +1,7 @@
 # Documentation index
 
 `me` is a small static Astro site. The documentation stays intentionally
-compact while still covering the character-art renderer, privacy boundary,
+compact while still covering the 3D renderer, privacy boundary,
 deployment, maintenance workflow, and known gaps.
 
 ```mermaid
@@ -31,7 +31,7 @@ flowchart LR
 | --- | --- |
 | [`../README.md`](../README.md) | You need the design intent, quick start, or deployment summary |
 | [`development.md`](development.md) | You are changing copy, links, rendering, metadata, or build configuration |
-| [`architecture.md`](architecture.md) | You need page composition, the Nocturne pipeline, delivery, or failure behavior |
+| [`architecture.md`](architecture.md) | You need page composition, the Hyperion pipeline, delivery, or failure behavior |
 | [`observability.md`](observability.md) | You are verifying minimized Sentry/PostHog behavior or rotating release credentials |
 | [`roadmap.md`](roadmap.md) | You need the current quality and maintenance gaps |
 | [`../CONTRIBUTING.md`](../CONTRIBUTING.md) | You are preparing a change |

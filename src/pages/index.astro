@@ -47,15 +47,22 @@ const links = [
   </head>
 
   <body>
-    <canvas id="sky" aria-hidden="true"></canvas>
+    <canvas id="hyperion" aria-hidden="true"></canvas>
+    <div class="aurora" aria-hidden="true"></div>
     <div class="vignette" aria-hidden="true"></div>
     <div class="grain" aria-hidden="true"></div>
 
     <main>
       <header class="topbar">
         <span class="mark reveal">krmznkr</span>
-        <span class="place reveal">Open source · privacy-minded</span>
+        <span class="place reveal">Open source · privacy-minded · signal 144m</span>
       </header>
+
+      <aside class="scene-meta reveal" aria-hidden="true">
+        <span>HYPERION / 13TH FLEET</span>
+        <span>DRAG TO ORBIT</span>
+        <span>MESH / SIR TOPHAM HATT</span>
+      </aside>
 
       <div class="bottom">
         <section class="intro">
@@ -96,12 +103,16 @@ const links = [
           >this page</a>
         </footer>
       </div>
+
+      <button class="motion-control reveal" type="button" aria-pressed="false">
+        <span class="motion-icon" aria-hidden="true"></span>
+        <span class="motion-label">Pause drift</span>
+      </button>
     </main>
 
     <script>
       import '../scripts/sentry'
       import { capturePostHogEvent } from '../scripts/posthog'
-      import { startNocturne } from '../scripts/nocturne'
       document.addEventListener('click', (event) => {
         const target = event.target
         if (!(target instanceof Element)) return
@@ -113,8 +124,21 @@ const links = [
           destination: link.dataset.analyticsDestination,
         })
       })
-      const canvas = document.getElementById('sky') as HTMLCanvasElement | null
-      if (canvas) startNocturne(canvas)
+      const canvas = document.getElementById('hyperion') as HTMLCanvasElement | null
+      const motionControl = document.querySelector<HTMLButtonElement>('.motion-control')
+      if (canvas) {
+        import('../scripts/hyperion').then(({ startHyperion }) => startHyperion(canvas)).then((scene) => {
+          motionControl?.addEventListener('click', () => {
+            const paused = scene.toggleMotion()
+            motionControl.setAttribute('aria-pressed', String(paused))
+            const label = motionControl.querySelector('.motion-label')
+            if (label) label.textContent = paused ? 'Resume drift' : 'Pause drift'
+          })
+        }).catch((error) => {
+          console.error('Hyperion scene failed to load', error)
+          document.documentElement.classList.add('scene-error')
+        })
+      }
       requestAnimationFrame(() =>
         requestAnimationFrame(() =>
           document.documentElement.classList.add('ready'),
@@ -154,13 +178,33 @@ const links = [
         min-height: 100dvh;
       }
 
-      #sky {
+      #hyperion {
         position: fixed;
         inset: 0;
         width: 100%;
         height: 100%;
         display: block;
         z-index: 0;
+        opacity: 0;
+        cursor: grab;
+        touch-action: none;
+        transition: opacity 1.8s cubic-bezier(0.2, 0.65, 0.2, 1);
+      }
+      html.scene-ready #hyperion {
+        opacity: 1;
+      }
+      #hyperion.is-dragging {
+        cursor: grabbing;
+      }
+
+      .aurora {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        background:
+          radial-gradient(ellipse 52% 58% at 72% 42%, rgba(63, 94, 112, 0.12), transparent 72%),
+          linear-gradient(90deg, rgba(6, 6, 8, 0.54) 0%, transparent 52%);
       }
 
       /* Draw the eye down-left and deepen the corners. */
@@ -195,6 +239,7 @@ const links = [
         padding: clamp(1.4rem, 3.5vw, 3.25rem);
         padding-top: max(clamp(1.4rem, 3.5vw, 3.25rem), env(safe-area-inset-top));
         padding-bottom: max(clamp(1.4rem, 3.5vw, 3.25rem), env(safe-area-inset-bottom));
+        pointer-events: none;
       }
 
       .topbar {
@@ -211,6 +256,24 @@ const links = [
       }
       .place {
         color: var(--faint);
+      }
+
+      .scene-meta {
+        position: absolute;
+        right: max(clamp(1.4rem, 3.5vw, 3.25rem), env(safe-area-inset-right));
+        top: 50%;
+        display: flex;
+        flex-direction: column;
+        gap: 0.45rem;
+        color: rgba(185, 184, 189, 0.34);
+        font-family: var(--mono);
+        font-size: 0.58rem;
+        letter-spacing: 0.18em;
+        text-align: right;
+        transform: translateY(-50%);
+      }
+      .scene-meta span:last-child {
+        color: rgba(131, 131, 140, 0.44);
       }
 
       .bottom {
@@ -271,6 +334,7 @@ const links = [
         transition:
           color 0.3s ease,
           border-color 0.3s ease;
+        pointer-events: auto;
       }
       .links a svg {
         color: var(--faint);
@@ -305,6 +369,7 @@ const links = [
         text-decoration: none;
         border-bottom: 1px solid transparent;
         transition: color 0.3s ease, border-color 0.3s ease;
+        pointer-events: auto;
       }
       .footer a:hover {
         color: var(--ink);
@@ -312,6 +377,60 @@ const links = [
       }
       .sep {
         color: var(--faint);
+      }
+
+      .motion-control {
+        position: absolute;
+        right: max(clamp(1.4rem, 3.5vw, 3.25rem), env(safe-area-inset-right));
+        bottom: max(clamp(1.4rem, 3.5vw, 3.25rem), env(safe-area-inset-bottom));
+        display: inline-flex;
+        align-items: center;
+        gap: 0.65rem;
+        padding: 0;
+        border: 0;
+        background: none;
+        color: var(--muted);
+        font: 0.65rem var(--mono);
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        cursor: pointer;
+        pointer-events: auto;
+      }
+      .motion-control:hover,
+      .motion-control:focus-visible {
+        color: var(--ink);
+        outline: none;
+      }
+      .motion-icon {
+        position: relative;
+        width: 1.35rem;
+        height: 1.35rem;
+        border: 1px solid rgba(185, 184, 189, 0.3);
+        border-radius: 50%;
+      }
+      .motion-icon::before,
+      .motion-icon::after {
+        position: absolute;
+        top: 0.4rem;
+        width: 1px;
+        height: 0.45rem;
+        background: currentColor;
+        content: '';
+      }
+      .motion-icon::before { left: 0.5rem; }
+      .motion-icon::after { right: 0.5rem; }
+      .motion-control[aria-pressed='true'] .motion-icon::before {
+        top: 0.38rem;
+        left: 0.54rem;
+        width: 0;
+        height: 0;
+        border-top: 0.3rem solid transparent;
+        border-bottom: 0.3rem solid transparent;
+        border-left: 0.45rem solid currentColor;
+        background: none;
+      }
+      .motion-control[aria-pressed='true'] .motion-icon::after {
+        display: none;
       }
 
       /* Staggered reveal. The hidden start state lives in render-blocking CSS
@@ -346,12 +465,34 @@ const links = [
       html.js .footer.reveal {
         transition-delay: 0.9s;
       }
+      html.js .scene-meta.reveal,
+      html.js .motion-control.reveal {
+        transition-delay: 1.05s;
+      }
 
       @media (prefers-reduced-motion: reduce) {
         html.js .reveal {
           opacity: 1 !important;
           transform: none !important;
           transition: none !important;
+        }
+        #hyperion {
+          transition: none;
+        }
+        .motion-control {
+          display: none;
+        }
+      }
+
+      @media (max-width: 700px) {
+        .aurora {
+          background:
+            radial-gradient(ellipse 82% 40% at 50% 29%, rgba(63, 94, 112, 0.12), transparent 75%),
+            linear-gradient(0deg, rgba(6, 6, 8, 0.58) 0%, transparent 58%);
+        }
+        .scene-meta,
+        .motion-control {
+          display: none;
         }
       }
 

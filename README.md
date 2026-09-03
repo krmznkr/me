@@ -1,39 +1,31 @@
 # me
 
 A single, quiet homepage for the `krmznkr` identity: a full-stack software
-engineer building in the open. It renders a monochrome moon as character-art on
-an HTML canvas and links out to open-source work.
+engineer building in the open. It places an interactive 3D Hyperion in a
+cinematic star field and links out to open-source work.
 
 Live at [`me.krmznkr.com`](https://me.krmznkr.com).
 
 ## Design
 
-A quiet monochrome nightscape rendered as **character-art** on an HTML canvas:
-a side-lit 3D moon sampled onto a monospace glyph grid, a sparse scatter of
-slowly breathing stars, and a whisper of film grain — everything else is pure
-black. See [`src/scripts/nocturne.ts`](src/scripts/nocturne.ts).
+A monochrome deep-space portrait rendered with **Three.js**: the Hyperion model
+drifts through a sparse star field under cold, directional light and a layer of
+film grain. See [`src/scripts/hyperion.ts`](src/scripts/hyperion.ts).
 
-- **Glyph, not pixel.** The scene is sampled on a Geist Mono character grid;
-  each cell's luminance selects a glyph from a density ramp
-  (`· : - = + i c o * 0 @`, dark → light) and a matching gray. The bright limb
-  lands on `@ 0`, the terminator falls off through `c o i` into faint `- . :`
-  dust. It's the same idea as an image → ASCII converter, but grayscale and
-  driven by a live moon rather than a photo.
-- **The art is a subject, not a texture.** The moon is placed with intent
-  (off-centre in landscape, high-centre in portrait) so the type always keeps
-  its own dark, high-contrast space. Stars are masked out of the hero's text
-  band — no noise behind the words.
-- **Round on screen, not in the grid.** The moon's circle math runs in screen
-  pixels, so it stays perfectly round despite the tall (~1.3:1) glyph cells.
-- **Every aspect ratio.** The canvas is DPR-aware and re-composes on resize;
-  the layout is fluid from tall phones to ultrawide displays.
-- **Calm by default.** Motion is slow (~34fps, with a whisper of temporal
-  shimmer) and respects `prefers-reduced-motion`; the scene pauses when the tab
-  is hidden. The greeting fades up on load but is fully present in the HTML
-  without JavaScript.
+- **A subject, not a demo.** The ship occupies the page's negative space and
+  leaves the identity, description, and links in a quiet high-contrast band.
+- **Tactile but restrained.** Pointer movement creates subtle parallax, dragging
+  rotates the ship, and a small control pauses its automatic drift.
+- **Authored for every aspect ratio.** Camera, model scale, and composition
+  change between portrait and landscape rather than simply shrinking.
+- **Progressive enhancement.** The semantic content is built into the initial
+  HTML. The 3D module loads separately, fades in only after the model is ready,
+  pauses while hidden, and respects `prefers-reduced-motion`.
+- **Bounded rendering cost.** Device pixel ratio is capped more aggressively on
+  small screens while preserving high-quality output on desktop.
 
-Built with [Astro](https://astro.build), Geist (sans) for the name and
-sentence, and Geist Mono for the small labels. Ships almost no JavaScript.
+Built with [Astro](https://astro.build), [Three.js](https://threejs.org), Geist
+(sans) for the name and sentence, and Geist Mono for the small labels.
 
 ## Develop
 
@@ -65,7 +57,7 @@ verification commands, and token-rotation runbooks.
 ## Documentation
 
 - [`docs/README.md`](docs/README.md) — documentation map and ownership.
-- [`docs/architecture.md`](docs/architecture.md) — page composition, character
+- [`docs/architecture.md`](docs/architecture.md) — page composition, 3D
   renderer, runtime boundaries, deployment, observability, and failure
   behavior.
 - [`docs/development.md`](docs/development.md) — toolchain, change map, visual
