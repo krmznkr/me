@@ -24,6 +24,8 @@ site in `dist/`. There is no backend or local secret setup.
 | Change | Primary file | Focused check |
 | --- | --- | --- |
 | Copy, links, metadata, semantic structure | `src/pages/index.astro` | View source with JavaScript disabled; run `pnpm check` |
+| Tokens, layout, responsive and element states | `src/styles/home.stylex.ts` | Desktop, phone, hover, focus, and extracted production CSS |
+| Reset, cross-element reveal and icon geometry | `src/styles/global.css` | No component-level declarations drift back into global CSS |
 | Ship, stars, lighting, resize, reduced motion | `src/scripts/hyperion.ts`, `public/models/hyperion.glb` | Phone, desktop, ultrawide, hidden tab, reduced motion |
 | Error/performance reporting | `src/scripts/sentry.ts` | Production-only initialization and data scrubbing |
 | Page/outbound analytics | `src/scripts/posthog.ts` | No persistence, query strings, fragments, or dynamic link data |

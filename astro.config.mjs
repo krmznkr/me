@@ -1,5 +1,6 @@
 // @ts-check
 import { sentryVitePlugin } from '@sentry/vite-plugin'
+import stylex from '@stylexjs/unplugin'
 import { defineConfig } from 'astro/config'
 
 const runtimeEnv = /** @type {any} */ (globalThis).process.env
@@ -31,7 +32,7 @@ export default defineConfig({
     inlineStylesheets: 'always',
   },
   vite: {
-    plugins: [sentryPlugin],
+    plugins: [stylex.vite({ useCSSLayers: true }), sentryPlugin],
     build: {
       sourcemap: sentryPlugin ? 'hidden' : false,
       // Keep every script external so the strict CSP (script-src 'self')

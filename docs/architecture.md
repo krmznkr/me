@@ -11,7 +11,7 @@ production-only observability integrations.
 flowchart LR
   visitor["Browser"]
   edge["Cloudflare Worker<br/>static asset binding"]
-  html["Prebuilt Astro HTML + CSS"]
+  html["Prebuilt Astro HTML + compiled StyleX CSS"]
   hyperion["Hyperion WebGL renderer"]
   sentry["Sentry EU"]
   posthog["PostHog EU"]
@@ -42,7 +42,7 @@ flowchart TD
   page["src/pages/index.astro"]
   metadata["SEO / Open Graph metadata"]
   content["Semantic HTML<br/>header, intro, links, footer"]
-  styles["Inlined page CSS"]
+  styles["Compiled StyleX classes<br/>+ minimal global CSS"]
   boot["Client boot script"]
   sentry["Initialize Sentry in production"]
   posthog["Lazy-load PostHog in production"]
@@ -59,9 +59,12 @@ flowchart TD
   boot --> reveal
 ```
 
-The meaningful text and links are present in the initial HTML. JavaScript adds
-the decorative canvas, telemetry, outbound-link events, and staggered reveal;
-the content does not depend on those enhancements.
+The meaningful text and links are present in the initial HTML. StyleX compiles
+the page tokens, layout, responsive rules, and element interaction states into
+atomic CSS at build time. `global.css` is limited to document-wide resets,
+cross-element reveal state, and generated icon geometry. JavaScript adds the
+decorative canvas, telemetry, outbound-link events, and staggered reveal; the
+content does not depend on those enhancements.
 
 ## Hyperion render pipeline
 
@@ -159,7 +162,9 @@ tagged anchor; it does not send link text or URL as a custom property. See
 
 | Change | Primary files |
 | --- | --- |
-| Copy, links, metadata, layout, styling | `src/pages/index.astro` |
+| Copy, links, metadata, semantic structure | `src/pages/index.astro` |
+| Design tokens, layout, responsive and element states | `src/styles/home.stylex.ts` |
+| Global reset, reveal orchestration and icon geometry | `src/styles/global.css` |
 | Ship, stars, lighting, motion, and responsive composition | `src/scripts/hyperion.ts`, `public/models/hyperion.glb` |
 | Error/performance monitoring | `src/scripts/sentry.ts` |
 | Traffic and outbound-link analytics | `src/scripts/posthog.ts` |

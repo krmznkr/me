@@ -14,6 +14,7 @@
     "@fontsource-variable/geist": "^5.2.9",
     "@fontsource-variable/geist-mono": "^5.2.8",
     "@sentry/browser": "^10.66.0",
+    "@stylexjs/stylex": "0.19.0",
     "astro": "^7.1.3",
     "posthog-js": "^1.404.1",
     "three": "^0.180.0"
@@ -21,6 +22,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
     "@sentry/vite-plugin": "^5.4.0",
+    "@stylexjs/unplugin": "0.19.0",
     "@types/three": "^0.180.0",
     "typescript": "^5.9.2",
     "wrangler": "^4.112.0"
