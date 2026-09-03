@@ -1,6 +1,9 @@
 ---
 import '@fontsource-variable/geist'
 import '@fontsource-variable/geist-mono'
+import * as stylex from '@stylexjs/stylex'
+import '../styles/global.css'
+import { styles } from '../styles/home.stylex'
 
 const title = 'krmznkr — full-stack software engineer'
 const description =
@@ -15,7 +18,7 @@ const links = [
 ---
 
 <!doctype html>
-<html lang="en" class="js">
+<html lang="en" class:list={['js', stylex.attrs(styles.html).class]}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -36,6 +39,15 @@ const links = [
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={`${url}/og.svg`} />
 
+    {
+      import.meta.env.DEV && (
+        <>
+          <link rel="stylesheet" href="/virtual:stylex.css" />
+          <script is:inline type="module" src="/@id/virtual:stylex:runtime"></script>
+        </>
+      )
+    }
+
     <noscript>
       <style>
         html.js .reveal {
@@ -46,34 +58,34 @@ const links = [
     </noscript>
   </head>
 
-  <body>
-    <canvas id="hyperion" aria-hidden="true"></canvas>
-    <div class="aurora" aria-hidden="true"></div>
-    <div class="vignette" aria-hidden="true"></div>
-    <div class="grain" aria-hidden="true"></div>
+  <body {...stylex.attrs(styles.body)}>
+    <canvas id="hyperion" {...stylex.attrs(styles.canvas)} aria-hidden="true"></canvas>
+    <div {...stylex.attrs(styles.fixedAtmosphere, styles.aurora)} aria-hidden="true"></div>
+    <div {...stylex.attrs(styles.fixedAtmosphere, styles.vignette)} aria-hidden="true"></div>
+    <div {...stylex.attrs(styles.fixedAtmosphere, styles.grain)} aria-hidden="true"></div>
 
-    <main>
-      <header class="topbar">
-        <span class="mark reveal">krmznkr</span>
-        <span class="place reveal">Open source · privacy-minded · signal 144m</span>
+    <main {...stylex.attrs(styles.main)}>
+      <header class:list={['topbar', stylex.attrs(styles.topbar).class]}>
+        <span class:list={['reveal', stylex.attrs(styles.mark).class]}>krmznkr</span>
+        <span class:list={['reveal', stylex.attrs(styles.place).class]}>Open source · privacy-minded · signal 144m</span>
       </header>
 
-      <aside class="scene-meta reveal" aria-hidden="true">
+      <aside class:list={['scene-meta', 'reveal', stylex.attrs(styles.sceneMeta).class]} aria-hidden="true">
         <span>HYPERION / 13TH FLEET</span>
         <span>DRAG TO ORBIT</span>
-        <span>MESH / SIR TOPHAM HATT</span>
+        <span {...stylex.attrs(styles.sceneCredit)}>MESH / SIR TOPHAM HATT</span>
       </aside>
 
-      <div class="bottom">
-        <section class="intro">
-          <p class="kicker reveal">Hey — my name is</p>
-          <h1 class="reveal">krmznkr</h1>
-          <p class="lede reveal">
+      <div {...stylex.attrs(styles.bottom)}>
+        <section {...stylex.attrs(styles.intro)}>
+          <p class:list={['kicker', 'reveal', stylex.attrs(styles.kicker).class]}>Hey — my name is</p>
+          <h1 class:list={['heading', 'reveal', stylex.attrs(styles.heading).class]}>krmznkr</h1>
+          <p class:list={['lede', 'reveal', stylex.attrs(styles.lede).class]}>
             I'm a full-stack software engineer building calm, careful software
             in the open.
           </p>
 
-          <nav class="links reveal" aria-label="Elsewhere">
+          <nav class:list={['links', 'reveal', stylex.attrs(styles.links).class]} aria-label="Elsewhere">
             {
               links.map((l) => (
                 <a
@@ -81,9 +93,10 @@ const links = [
                   rel="me noopener"
                   target="_blank"
                   data-analytics-destination={l.label.toLowerCase()}
+                  class:list={['link', stylex.attrs(styles.link).class]}
                 >
                   <span>{l.label}</span>
-                  <svg viewBox="0 0 12 12" width="11" height="11" aria-hidden="true">
+                  <svg class:list={['link-icon', stylex.attrs(styles.linkIcon).class]} viewBox="0 0 12 12" width="11" height="11" aria-hidden="true">
                     <path d="M3 9L9 3M9 3H4M9 3V8" stroke="currentColor" stroke-width="1.1" fill="none" stroke-linecap="square" />
                   </svg>
                 </a>
@@ -92,20 +105,21 @@ const links = [
           </nav>
         </section>
 
-        <footer class="footer reveal">
+        <footer class:list={['footer', 'reveal', stylex.attrs(styles.footer).class]}>
           <span>Open source</span>
-          <span class="sep" aria-hidden="true">/</span>
+          <span {...stylex.attrs(styles.separator)} aria-hidden="true">/</span>
           <a
             href="https://github.com/krmznkr/me"
             rel="noopener"
             target="_blank"
             data-analytics-destination="source"
+            {...stylex.attrs(styles.footerLink)}
           >this page</a>
         </footer>
       </div>
 
-      <button class="motion-control reveal" type="button" aria-pressed="false">
-        <span class="motion-icon" aria-hidden="true"></span>
+      <button class:list={['motion-control', 'reveal', stylex.attrs(styles.motionControl).class]} type="button" aria-pressed="false">
+        <span class:list={['motion-icon', stylex.attrs(styles.motionIcon).class]} aria-hidden="true"></span>
         <span class="motion-label">Pause drift</span>
       </button>
     </main>
@@ -146,361 +160,5 @@ const links = [
       )
     </script>
 
-    <style is:global>
-      :root {
-        --bg: #060608;
-        --ink: #edecea;
-        --soft: #b9b8bd;
-        --muted: #83838c;
-        --faint: #4c4c55;
-        --line: rgba(237, 236, 234, 0.14);
-        --sans: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
-        --mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
-        color-scheme: dark;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-      }
-      body {
-        background: var(--bg);
-        color: var(--ink);
-        font-family: var(--sans);
-        -webkit-font-smoothing: antialiased;
-        text-rendering: optimizeLegibility;
-        overflow: hidden;
-        min-height: 100dvh;
-      }
-
-      #hyperion {
-        position: fixed;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        display: block;
-        z-index: 0;
-        opacity: 0;
-        cursor: grab;
-        touch-action: none;
-        transition: opacity 1.8s cubic-bezier(0.2, 0.65, 0.2, 1);
-      }
-      html.scene-ready #hyperion {
-        opacity: 1;
-      }
-      #hyperion.is-dragging {
-        cursor: grabbing;
-      }
-
-      .aurora {
-        position: fixed;
-        inset: 0;
-        z-index: 1;
-        pointer-events: none;
-        background:
-          radial-gradient(ellipse 52% 58% at 72% 42%, rgba(63, 94, 112, 0.12), transparent 72%),
-          linear-gradient(90deg, rgba(6, 6, 8, 0.54) 0%, transparent 52%);
-      }
-
-      /* Draw the eye down-left and deepen the corners. */
-      .vignette {
-        position: fixed;
-        inset: 0;
-        z-index: 1;
-        pointer-events: none;
-        background: radial-gradient(
-          130% 110% at 62% 30%,
-          transparent 48%,
-          rgba(0, 0, 0, 0.55) 100%
-        );
-      }
-      /* A whisper of film grain for texture. */
-      .grain {
-        position: fixed;
-        inset: -50%;
-        z-index: 1;
-        pointer-events: none;
-        opacity: 0.035;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
-      }
-
-      main {
-        position: relative;
-        z-index: 2;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        min-height: 100dvh;
-        padding: clamp(1.4rem, 3.5vw, 3.25rem);
-        padding-top: max(clamp(1.4rem, 3.5vw, 3.25rem), env(safe-area-inset-top));
-        padding-bottom: max(clamp(1.4rem, 3.5vw, 3.25rem), env(safe-area-inset-bottom));
-        pointer-events: none;
-      }
-
-      .topbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: baseline;
-        font-family: var(--mono);
-        font-size: 0.72rem;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-      }
-      .mark {
-        color: var(--ink);
-      }
-      .place {
-        color: var(--faint);
-      }
-
-      .scene-meta {
-        position: absolute;
-        right: max(clamp(1.4rem, 3.5vw, 3.25rem), env(safe-area-inset-right));
-        top: 50%;
-        display: flex;
-        flex-direction: column;
-        gap: 0.45rem;
-        color: rgba(185, 184, 189, 0.34);
-        font-family: var(--mono);
-        font-size: 0.58rem;
-        letter-spacing: 0.18em;
-        text-align: right;
-        transform: translateY(-50%);
-      }
-      .scene-meta span:last-child {
-        color: rgba(131, 131, 140, 0.44);
-      }
-
-      .bottom {
-        display: flex;
-        flex-direction: column;
-        gap: clamp(2rem, 5vh, 3.5rem);
-      }
-
-      .intro {
-        max-width: 40rem;
-      }
-
-      .kicker {
-        margin: 0 0 1.1rem;
-        font-family: var(--mono);
-        font-size: clamp(0.72rem, 1.6vw, 0.82rem);
-        letter-spacing: 0.22em;
-        text-transform: uppercase;
-        color: var(--muted);
-      }
-
-      h1 {
-        margin: 0;
-        font-family: var(--sans);
-        font-weight: 600;
-        line-height: 0.95;
-        letter-spacing: -0.035em;
-        font-size: clamp(2.7rem, 9vw, 5rem);
-        color: #f6f5f3;
-      }
-
-      .lede {
-        margin: 1.5rem 0 0;
-        max-width: 40ch;
-        font-size: clamp(1rem, 2.3vw, 1.2rem);
-        line-height: 1.62;
-        color: var(--soft);
-        font-weight: 350;
-      }
-
-      .links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1.6rem;
-        margin-top: 2.4rem;
-        font-family: var(--mono);
-        font-size: 0.8rem;
-        letter-spacing: 0.04em;
-      }
-      .links a {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5em;
-        color: var(--soft);
-        text-decoration: none;
-        padding-bottom: 0.35em;
-        border-bottom: 1px solid transparent;
-        transition:
-          color 0.3s ease,
-          border-color 0.3s ease;
-        pointer-events: auto;
-      }
-      .links a svg {
-        color: var(--faint);
-        transition:
-          transform 0.3s ease,
-          color 0.3s ease;
-      }
-      .links a:hover,
-      .links a:focus-visible {
-        color: var(--ink);
-        border-color: var(--line);
-        outline: none;
-      }
-      .links a:hover svg,
-      .links a:focus-visible svg {
-        color: var(--ink);
-        transform: translate(2px, -2px);
-      }
-
-      .footer {
-        display: flex;
-        align-items: center;
-        gap: 0.7em;
-        font-family: var(--mono);
-        font-size: 0.7rem;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-        color: var(--faint);
-      }
-      .footer a {
-        color: var(--muted);
-        text-decoration: none;
-        border-bottom: 1px solid transparent;
-        transition: color 0.3s ease, border-color 0.3s ease;
-        pointer-events: auto;
-      }
-      .footer a:hover {
-        color: var(--ink);
-        border-color: var(--line);
-      }
-      .sep {
-        color: var(--faint);
-      }
-
-      .motion-control {
-        position: absolute;
-        right: max(clamp(1.4rem, 3.5vw, 3.25rem), env(safe-area-inset-right));
-        bottom: max(clamp(1.4rem, 3.5vw, 3.25rem), env(safe-area-inset-bottom));
-        display: inline-flex;
-        align-items: center;
-        gap: 0.65rem;
-        padding: 0;
-        border: 0;
-        background: none;
-        color: var(--muted);
-        font: 0.65rem var(--mono);
-        letter-spacing: 0.13em;
-        text-transform: uppercase;
-        cursor: pointer;
-        pointer-events: auto;
-      }
-      .motion-control:hover,
-      .motion-control:focus-visible {
-        color: var(--ink);
-        outline: none;
-      }
-      .motion-icon {
-        position: relative;
-        width: 1.35rem;
-        height: 1.35rem;
-        border: 1px solid rgba(185, 184, 189, 0.3);
-        border-radius: 50%;
-      }
-      .motion-icon::before,
-      .motion-icon::after {
-        position: absolute;
-        top: 0.4rem;
-        width: 1px;
-        height: 0.45rem;
-        background: currentColor;
-        content: '';
-      }
-      .motion-icon::before { left: 0.5rem; }
-      .motion-icon::after { right: 0.5rem; }
-      .motion-control[aria-pressed='true'] .motion-icon::before {
-        top: 0.38rem;
-        left: 0.54rem;
-        width: 0;
-        height: 0;
-        border-top: 0.3rem solid transparent;
-        border-bottom: 0.3rem solid transparent;
-        border-left: 0.45rem solid currentColor;
-        background: none;
-      }
-      .motion-control[aria-pressed='true'] .motion-icon::after {
-        display: none;
-      }
-
-      /* Staggered reveal. The hidden start state lives in render-blocking CSS
-         so content never paints visible and then flashes hidden. A <noscript>
-         override below keeps everything visible when JS is unavailable. */
-      html.js .reveal {
-        opacity: 0;
-        transform: translateY(14px);
-        transition:
-          opacity 0.95s cubic-bezier(0.2, 0.65, 0.2, 1),
-          transform 0.95s cubic-bezier(0.2, 0.65, 0.2, 1);
-      }
-      html.js.ready .reveal {
-        opacity: 1;
-        transform: none;
-      }
-      html.js .topbar .reveal {
-        transition-delay: 0.05s;
-      }
-      html.js .kicker.reveal {
-        transition-delay: 0.35s;
-      }
-      html.js h1.reveal {
-        transition-delay: 0.46s;
-      }
-      html.js .lede.reveal {
-        transition-delay: 0.6s;
-      }
-      html.js .links.reveal {
-        transition-delay: 0.76s;
-      }
-      html.js .footer.reveal {
-        transition-delay: 0.9s;
-      }
-      html.js .scene-meta.reveal,
-      html.js .motion-control.reveal {
-        transition-delay: 1.05s;
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        html.js .reveal {
-          opacity: 1 !important;
-          transform: none !important;
-          transition: none !important;
-        }
-        #hyperion {
-          transition: none;
-        }
-        .motion-control {
-          display: none;
-        }
-      }
-
-      @media (max-width: 700px) {
-        .aurora {
-          background:
-            radial-gradient(ellipse 82% 40% at 50% 29%, rgba(63, 94, 112, 0.12), transparent 75%),
-            linear-gradient(0deg, rgba(6, 6, 8, 0.58) 0%, transparent 58%);
-        }
-        .scene-meta,
-        .motion-control {
-          display: none;
-        }
-      }
-
-      @media (max-width: 460px) {
-        .place {
-          display: none;
-        }
-      }
-    </style>
   </body>
 </html>

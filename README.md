@@ -24,8 +24,9 @@ film grain. See [`src/scripts/hyperion.ts`](src/scripts/hyperion.ts).
 - **Bounded rendering cost.** Device pixel ratio is capped more aggressively on
   small screens while preserving high-quality output on desktop.
 
-Built with [Astro](https://astro.build), [Three.js](https://threejs.org), Geist
-(sans) for the name and sentence, and Geist Mono for the small labels.
+Built with [Astro](https://astro.build), [StyleX](https://stylexjs.com),
+[Three.js](https://threejs.org), Geist (sans) for the name and sentence, and
+Geist Mono for the small labels.
 
 ## Develop
 
