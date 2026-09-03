@@ -24,7 +24,7 @@ site in `dist/`. There is no backend or local secret setup.
 | Change | Primary file | Focused check |
 | --- | --- | --- |
 | Copy, links, metadata, semantic structure | `src/pages/index.astro` | View source with JavaScript disabled; run `pnpm check` |
-| Moon, stars, glyphs, resize, reduced motion | `src/scripts/nocturne.ts` | Phone, desktop, ultrawide, hidden tab, reduced motion |
+| Ship, stars, lighting, resize, reduced motion | `src/scripts/hyperion.ts`, `public/models/hyperion.glb` | Phone, desktop, ultrawide, hidden tab, reduced motion |
 | Error/performance reporting | `src/scripts/sentry.ts` | Production-only initialization and data scrubbing |
 | Page/outbound analytics | `src/scripts/posthog.ts` | No persistence, query strings, fragments, or dynamic link data |
 | Build and source maps | `astro.config.mjs` | Local build creates no upload; CI release flow stays intact |
@@ -32,7 +32,7 @@ site in `dist/`. There is no backend or local secret setup.
 
 ## Visual verification
 
-The character renderer is deliberately visual and currently has no automated
+The 3D renderer is deliberately visual and currently has no automated
 snapshot suite. At minimum, inspect:
 
 1. A narrow phone viewport in portrait.
@@ -43,9 +43,9 @@ snapshot suite. At minimum, inspect:
 6. A page load with JavaScript disabled.
 7. Tab hide/show and a live resize.
 
-Check that the moon remains circular, text retains a quiet high-contrast band,
-stars do not overlap the hero copy, and all links remain ordinary semantic
-anchors.
+Check that the ship retains readable depth, stays clear of the hero copy, fits
+without horizontal overflow, and leaves every link as an ordinary semantic
+anchor. Verify pointer parallax, drag rotation, and the pause control.
 
 ## Privacy boundary
 
