@@ -1,13 +1,17 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "me",
+  "main": "worker/index.ts",
   "compatibility_date": "2026-07-21",
   "workers_dev": false,
   "assets": {
     "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": true,
     "not_found_handling": "single-page-application"
   },
   "routes": [
-    { "pattern": "me.krmznkr.com", "custom_domain": true }
+    { "pattern": "me.krmznkr.com", "custom_domain": true },
+    { "pattern": "krmznkr.com/*", "zone_name": "krmznkr.com" }
   ]
 }
