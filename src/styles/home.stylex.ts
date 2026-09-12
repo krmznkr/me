@@ -22,7 +22,7 @@ export const styles = stylex.create({
     padding: 0,
     height: '100%',
     minHeight: '100dvh',
-    overflow: 'hidden',
+    overflowX: 'hidden',
     backgroundColor: colors.background,
     color: colors.ink,
     fontFamily: sans,
@@ -68,31 +68,12 @@ export const styles = stylex.create({
     zIndex: 2,
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     minHeight: '100dvh',
     padding: 'clamp(1.4rem, 3.5vw, 3.25rem)',
     paddingTop: 'max(clamp(1.4rem, 3.5vw, 3.25rem), env(safe-area-inset-top))',
     paddingBottom: 'max(clamp(1.4rem, 3.5vw, 3.25rem), env(safe-area-inset-bottom))',
     pointerEvents: 'none',
-  },
-  topbar: {
-    display: 'flex',
-    alignItems: 'baseline',
-    justifyContent: 'space-between',
-    fontFamily: mono,
-    fontSize: '0.72rem',
-    letterSpacing: '0.16em',
-    textTransform: 'uppercase',
-  },
-  mark: {
-    color: colors.ink,
-  },
-  place: {
-    display: {
-      default: 'inline',
-      '@media (max-width: 460px)': 'none',
-    },
-    color: colors.faint,
   },
   sceneMeta: {
     position: 'absolute',
@@ -104,7 +85,7 @@ export const styles = stylex.create({
     },
     flexDirection: 'column',
     gap: '0.45rem',
-    color: 'rgba(185, 184, 189, 0.34)',
+    color: colors.muted,
     fontFamily: mono,
     fontSize: '0.58rem',
     letterSpacing: '0.18em',
@@ -112,7 +93,7 @@ export const styles = stylex.create({
     transform: 'translateY(-50%)',
   },
   sceneCredit: {
-    color: 'rgba(131, 131, 140, 0.44)',
+    color: colors.muted,
   },
   bottom: {
     display: 'flex',
@@ -121,17 +102,6 @@ export const styles = stylex.create({
   },
   intro: {
     maxWidth: '40rem',
-  },
-  kicker: {
-    marginTop: 0,
-    marginRight: 0,
-    marginBottom: '1.1rem',
-    marginLeft: 0,
-    color: colors.muted,
-    fontFamily: mono,
-    fontSize: 'clamp(0.72rem, 1.6vw, 0.82rem)',
-    letterSpacing: '0.22em',
-    textTransform: 'uppercase',
   },
   heading: {
     margin: 0,
@@ -221,9 +191,6 @@ export const styles = stylex.create({
     transitionProperty: 'color, border-color',
     transitionDuration: '0.3s',
     transitionTimingFunction: 'ease',
-  },
-  separator: {
-    color: colors.faint,
   },
   motionControl: {
     position: 'absolute',

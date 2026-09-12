@@ -5,9 +5,9 @@ import * as stylex from '@stylexjs/stylex'
 import '../styles/global.css'
 import { styles } from '../styles/home.stylex'
 
-const title = 'krmznkr — full-stack software engineer'
+const title = 'krmznkr | Full-stack software engineer'
 const description =
-  'krmznkr — a full-stack software engineer. Calm, careful software, built in the open.'
+  'Full-stack software engineer. Projects and source code by krmznkr.'
 const url = 'https://me.krmznkr.com'
 
 const links = [
@@ -18,7 +18,7 @@ const links = [
 ---
 
 <!doctype html>
-<html lang="en" class:list={['js', stylex.attrs(styles.html).class]}>
+<html lang="en" {...stylex.attrs(styles.html)}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -48,14 +48,6 @@ const links = [
       )
     }
 
-    <noscript>
-      <style>
-        html.js .reveal {
-          opacity: 1;
-          transform: none;
-        }
-      </style>
-    </noscript>
   </head>
 
   <body {...stylex.attrs(styles.body)}>
@@ -65,32 +57,24 @@ const links = [
     <div {...stylex.attrs(styles.fixedAtmosphere, styles.grain)} aria-hidden="true"></div>
 
     <main {...stylex.attrs(styles.main)}>
-      <header class:list={['topbar', stylex.attrs(styles.topbar).class]}>
-        <span class:list={['reveal', stylex.attrs(styles.mark).class]}>krmznkr</span>
-        <span class:list={['reveal', stylex.attrs(styles.place).class]}>Open source · privacy-minded · signal 144m</span>
-      </header>
-
-      <aside class:list={['scene-meta', 'reveal', stylex.attrs(styles.sceneMeta).class]} aria-hidden="true">
-        <span>HYPERION / 13TH FLEET</span>
-        <span>DRAG TO ORBIT</span>
-        <span {...stylex.attrs(styles.sceneCredit)}>MESH / SIR TOPHAM HATT</span>
+      <aside {...stylex.attrs(styles.sceneMeta)}>
+        <span>Hyperion</span>
+        <span {...stylex.attrs(styles.sceneCredit)}>Model by Sir Topham Hatt</span>
       </aside>
 
       <div {...stylex.attrs(styles.bottom)}>
         <section {...stylex.attrs(styles.intro)}>
-          <p class:list={['kicker', 'reveal', stylex.attrs(styles.kicker).class]}>Hey — my name is</p>
-          <h1 class:list={['heading', 'reveal', stylex.attrs(styles.heading).class]}>krmznkr</h1>
-          <p class:list={['lede', 'reveal', stylex.attrs(styles.lede).class]}>
-            I'm a full-stack software engineer building calm, careful software
-            in the open.
+          <h1 {...stylex.attrs(styles.heading)}>krmznkr</h1>
+          <p {...stylex.attrs(styles.lede)}>
+            Full-stack software engineer.
           </p>
 
-          <nav class:list={['links', 'reveal', stylex.attrs(styles.links).class]} aria-label="Elsewhere">
+          <nav {...stylex.attrs(styles.links)} aria-label="Projects and code">
             {
               links.map((l) => (
                 <a
                   href={l.href}
-                  rel="me noopener"
+                  rel={l.label === 'GitHub' ? 'me noopener' : 'noopener'}
                   target="_blank"
                   data-analytics-destination={l.label.toLowerCase()}
                   class:list={['link', stylex.attrs(styles.link).class]}
@@ -105,22 +89,20 @@ const links = [
           </nav>
         </section>
 
-        <footer class:list={['footer', 'reveal', stylex.attrs(styles.footer).class]}>
-          <span>Open source</span>
-          <span {...stylex.attrs(styles.separator)} aria-hidden="true">/</span>
+        <footer {...stylex.attrs(styles.footer)}>
           <a
             href="https://github.com/krmznkr/me"
             rel="noopener"
             target="_blank"
             data-analytics-destination="source"
             {...stylex.attrs(styles.footerLink)}
-          >this page</a>
+          >Source code</a>
         </footer>
       </div>
 
-      <button class:list={['motion-control', 'reveal', stylex.attrs(styles.motionControl).class]} type="button" aria-pressed="false">
+      <button class:list={['motion-control', stylex.attrs(styles.motionControl).class]} type="button" aria-pressed="false" disabled>
         <span class:list={['motion-icon', stylex.attrs(styles.motionIcon).class]} aria-hidden="true"></span>
-        <span class="motion-label">Pause drift</span>
+        <span class="motion-label">Pause animation</span>
       </button>
     </main>
 
@@ -142,22 +124,18 @@ const links = [
       const motionControl = document.querySelector<HTMLButtonElement>('.motion-control')
       if (canvas) {
         import('../scripts/hyperion').then(({ startHyperion }) => startHyperion(canvas)).then((scene) => {
+          if (motionControl) motionControl.disabled = false
           motionControl?.addEventListener('click', () => {
             const paused = scene.toggleMotion()
             motionControl.setAttribute('aria-pressed', String(paused))
             const label = motionControl.querySelector('.motion-label')
-            if (label) label.textContent = paused ? 'Resume drift' : 'Pause drift'
+            if (label) label.textContent = paused ? 'Resume animation' : 'Pause animation'
           })
         }).catch((error) => {
           console.error('Hyperion scene failed to load', error)
           document.documentElement.classList.add('scene-error')
         })
       }
-      requestAnimationFrame(() =>
-        requestAnimationFrame(() =>
-          document.documentElement.classList.add('ready'),
-        ),
-      )
     </script>
 
   </body>
