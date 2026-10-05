@@ -26,10 +26,10 @@ flowchart LR
 
 | Priority | Gap | Suggested outcome |
 | --- | --- | --- |
-| Next | No visual regression coverage | Capture stable phone, desktop, ultrawide, and reduced-motion states without freezing intentional shimmer |
+| Next | No pixel-baseline regression coverage | Browser checks now capture phone, laptop, ultrawide, reduced-motion and no-JavaScript review images; establish baselines only when they improve confidence |
 | Next | No automated accessibility check | Validate landmarks, heading order, links, contrast, canvas fallback, and keyboard use |
 | Next | No explicit performance budget | Track JavaScript size, font cost, canvas frame time, and long tasks so the page stays quiet and lightweight |
-| Later | No post-deploy smoke check | Confirm the custom domain, canonical metadata, security headers, and main links after deployment |
+| Done | Post-deploy smoke check | Deploy verifies the custom domain, canonical metadata, links, headers, model and root redirect |
 | Later | Renderer logic is largely integration-tested by sight | Extract deterministic geometry/luminance helpers only where tests improve confidence without distorting the design code |
 
 Implementation detail belongs in GitHub issues when an item is selected. The

@@ -26,3 +26,7 @@ pnpm-debug.log*
 
 # Wrangler
 .wrangler/
+
+# Browser review artifacts
+playwright-report/
+test-results/

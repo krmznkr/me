@@ -6,6 +6,13 @@ Describe the user-visible or operational outcome and why this change is needed.
 
 List the commands, tests, manual checks, or screenshots used to verify the change.
 
+## Visual review
+
+- Reviewed head SHA:
+- Exact preview URL or local preview:
+- Viewports and motion/fallback states inspected:
+- Result and any remaining limitations:
+
 ## Documentation checklist
 
 - [ ] I updated the README or deeper docs when behavior, architecture, setup, security, or operations changed.
