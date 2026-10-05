@@ -133,6 +133,12 @@ gh pr view --json headRefOid --jq .headRefOid
 scripts/merge-reviewed.sh <pr-number> <reviewed-head-sha>
 ```
 
+`main` is protected: changes require a PR, an up-to-date branch, the `ci`
+check (including browser review), and resolved conversations, including for
+admins. Force pushes and branch deletion are disabled. This single-maintainer
+repository does not require a second account’s approval; the recorded code
+and visual review remain part of the delivery procedure.
+
 The merge helper verifies the public identity, repository, PR state, unresolved
 required reviews and checks, then pins squash merge to the inspected head.
 A new push requires new review. CI remains authoritative; never bypass a red
