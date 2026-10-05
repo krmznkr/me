@@ -118,7 +118,10 @@ flowchart LR
 ```
 
 The `site` value in `astro.config.mjs` supplies canonical URL generation.
-`workers_dev` is disabled, so the site is exposed only at its custom domain.
+`workers_dev` is disabled for production. Version URLs are explicitly enabled
+for public PR review; owner-branch PRs upload a preview-mode version without
+assigning production traffic. Main continues to deploy production assets at
+the custom domain and now runs a post-deploy smoke check.
 The shared platform Terraform redirects `krmznkr.com` to that domain.
 
 ### Configuration and secrets

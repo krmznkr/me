@@ -1,0 +1,81 @@
+name: PR preview
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  preview:
+    # Only owner branches receive the public account's credential. Forks and
+    # dependency bots still get credential-free CI and browser screenshots.
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.user.login == github.repository_owner &&
+      !github.event.pull_request.draft
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24.15.0
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check && pnpm test && pnpm build:preview
+      - name: Enable version URLs without enabling the production workers.dev route
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          test "$CLOUDFLARE_ACCOUNT_ID" = '93527c9983d1c08638cb9c1de99f0450'
+          curl --fail-with-body --silent --show-error --request POST \
+            "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/me/subdomain" \
+            --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            --header 'Content-Type: application/json' \
+            --data '{"enabled":false,"previews_enabled":true}' | jq -e '.success == true'
+      - name: Upload a version without assigning production traffic
+        id: upload
+        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          command: versions upload --preview-alias pr-${{ github.event.pull_request.number }}
+      - name: Publish the exact-version link for review
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        env:
+          UPLOAD_OUTPUT: ${{ steps.upload.outputs.command-output }}
+          REVIEWED_SHA: ${{ github.event.pull_request.head.sha }}
+        with:
+          script: |
+            const output = process.env.UPLOAD_OUTPUT;
+            const exact = output.match(/Version Preview URL: (https:\/\/[a-z0-9.-]+\.workers\.dev)/)?.[1];
+            const alias = output.match(/Version Preview Alias URL: (https:\/\/[a-z0-9.-]+\.workers\.dev)/)?.[1];
+            if (!exact || !alias) throw new Error('Wrangler did not report both preview URLs');
+            const marker = '<!-- me-browser-preview -->';
+            const body = `${marker}\nPreview for \`${process.env.REVIEWED_SHA}\`: [exact version](${exact}) · [latest PR preview](${alias}).\n\nProduction traffic is unchanged. Telemetry is disabled. Review phone, laptop, ultrawide, reduced motion, and no-JavaScript behavior; screenshots are in the CI artifact.`;
+            const pr = await github.rest.pulls.get({...context.repo, pull_number: context.issue.number});
+            if (pr.data.head.sha !== process.env.REVIEWED_SHA) {
+              core.notice('Newer head exists; do not overwrite its preview comment');
+              return;
+            }
+            const comments = await github.paginate(github.rest.issues.listComments, {...context.repo, issue_number: context.issue.number});
+            const previous = comments.find(c => c.user.login === 'github-actions[bot]' && c.body.includes(marker));
+            if (previous) await github.rest.issues.updateComment({...context.repo, comment_id: previous.id, body});
+            else await github.rest.issues.createComment({...context.repo, issue_number: context.issue.number, body});
+            await core.summary.addHeading('Browser preview').addLink('Exact version', exact).addLink('Latest PR preview', alias).write();

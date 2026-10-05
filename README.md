@@ -20,6 +20,7 @@ pnpm dev
 pnpm build
 pnpm check
 pnpm test
+pnpm review                 # built browser preview, checks and screenshots
 ```
 
 The `me` Cloudflare Worker serves [the homepage](https://me.krmznkr.com) and
@@ -27,6 +28,11 @@ redirects [the root domain](https://krmznkr.com/) to it with HTTP 301, preservin
 the path and query. Pushes to `main` deploy automatically via the Deploy
 GitHub Actions workflow. The build publishes a Sentry release and source maps
 before wrangler deploys with the `CLOUDFLARE_API_TOKEN` repository secret.
+
+Owner-branch PRs receive an exact-version browser preview link. CI supplies
+phone, laptop, ultrawide and no-JavaScript screenshots. Follow the
+[delivery workflow](docs/development.md#repeatable-browser-and-delivery-workflow)
+for worktrees, visual review, an exact-head merge and production verification.
 
 ## Observability
 
