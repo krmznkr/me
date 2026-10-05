@@ -29,10 +29,16 @@ test('homepage renders its model, links and motion control without overflow or t
   ]) {
     await expect(page.getByRole('link', { name, exact: true })).toHaveAttribute('href', url)
   }
-  const motion = page.getByRole('button', { name: 'Pause animation' })
-  await expect(motion).toBeEnabled({ timeout: 30_000 })
-  await motion.click()
-  await expect(page.getByRole('button', { name: 'Resume animation' })).toHaveAttribute('aria-pressed', 'true')
+  const motion = page.locator('.motion-control')
+  await expect(motion).toBeEnabled({ timeout: 60_000 })
+  if ((page.viewportSize()?.width ?? 0) <= 700) {
+    // The existing mobile design intentionally hides this desktop control.
+    await expect(motion).toBeHidden()
+  } else {
+    await expect(motion).toBeVisible()
+    await motion.click()
+    await expect(page.getByRole('button', { name: 'Resume animation' })).toHaveAttribute('aria-pressed', 'true')
+  }
   await page.evaluate(() => document.fonts.ready)
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
   await page.screenshot({ path: info.outputPath('review.png'), fullPage: true })
@@ -43,7 +49,7 @@ test('homepage renders its model, links and motion control without overflow or t
 
 test('reduced motion renders the model with its manual pause control hidden', async ({ page }, info) => {
   await page.goto('/')
-  await expect(page.locator('.motion-control')).toBeEnabled({ timeout: 30_000 })
+  await expect(page.locator('.motion-control')).toBeEnabled({ timeout: 60_000 })
   await expect(page.locator('.motion-control')).toBeHidden()
   await expect(page.locator('html')).not.toHaveClass(/scene-error/)
   await page.evaluate(() => document.fonts.ready)

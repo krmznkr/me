@@ -98,7 +98,9 @@ and runs Chromium against the resulting static site. It captures phone,
 laptop and ultrawide screenshots with reduced motion, plus no-JavaScript
 fallbacks; it checks semantic links, model initialization, pause/resume,
 horizontal overflow, uncaught errors and the absence of external telemetry
-requests. Generated reports live in ignored `playwright-report/` and
+requests. The pause control is intentionally hidden on phones and under
+reduced motion. Software-rendered test animation is limited to five frames
+per second; this suite does not measure production animation performance. Generated reports live in ignored `playwright-report/` and
 `test-results/`. Use `pnpm exec playwright show-report` to inspect locally;
 CI uploads the report and images as a 14-day artifact linked from its run.
 These are inspection artifacts, not pixel baselines or an accessibility audit.
