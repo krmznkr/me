@@ -1,0 +1,67 @@
+* {
+  box-sizing: border-box;
+}
+
+html.scene-ready #hyperion {
+  opacity: 1;
+}
+
+#hyperion.is-dragging {
+  cursor: grabbing;
+}
+
+.link:hover .link-icon,
+.link:focus-visible .link-icon {
+  color: #edecea;
+  transform: translate(2px, -2px);
+}
+
+.motion-icon::before,
+.motion-icon::after {
+  position: absolute;
+  top: 0.4rem;
+  width: 1px;
+  height: 0.45rem;
+  background: currentColor;
+  content: '';
+}
+
+.motion-icon::before {
+  left: 0.5rem;
+}
+
+.motion-icon::after {
+  right: 0.5rem;
+}
+
+.motion-control[aria-pressed='true'] .motion-icon::before {
+  top: 0.38rem;
+  left: 0.54rem;
+  width: 0;
+  height: 0;
+  border-top: 0.3rem solid transparent;
+  border-bottom: 0.3rem solid transparent;
+  border-left: 0.45rem solid currentColor;
+  background: none;
+}
+
+.motion-control[aria-pressed='true'] .motion-icon::after {
+  display: none;
+}
+
+.motion-control:disabled,
+.scene-error .motion-control {
+  display: none;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid #edecea;
+  outline-offset: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #hyperion {
+    transition: none;
+  }
+}

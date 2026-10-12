@@ -56,7 +56,7 @@ async function initializePostHog() {
   return posthog
 }
 
-const postHogClient = import.meta.env.PROD
+const postHogClient = (import.meta.env.PROD && import.meta.env.MODE !== 'preview')
   ? initializePostHog().catch(() => null)
   : Promise.resolve(null)
 

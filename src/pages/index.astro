@@ -1,10 +1,13 @@
 ---
 import '@fontsource-variable/geist'
 import '@fontsource-variable/geist-mono'
+import * as stylex from '@stylexjs/stylex'
+import '../styles/global.css'
+import { styles } from '../styles/home.stylex'
 
-const title = 'krmznkr — full-stack software engineer'
+const title = 'krmznkr | Full-stack software engineer'
 const description =
-  'krmznkr — a full-stack software engineer. Calm, careful software, built in the open.'
+  'Full-stack software engineer. Projects and source code by krmznkr.'
 const url = 'https://me.krmznkr.com'
 
 const links = [
@@ -15,7 +18,7 @@ const links = [
 ---
 
 <!doctype html>
-<html lang="en" class="js">
+<html lang="en" {...stylex.attrs(styles.html)}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -36,47 +39,48 @@ const links = [
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={`${url}/og.svg`} />
 
-    <noscript>
-      <style>
-        html.js .reveal {
-          opacity: 1;
-          transform: none;
-        }
-      </style>
-    </noscript>
+    {
+      import.meta.env.DEV && (
+        <>
+          <link rel="stylesheet" href="/virtual:stylex.css" />
+          <script is:inline type="module" src="/@id/virtual:stylex:runtime"></script>
+        </>
+      )
+    }
+
   </head>
 
-  <body>
-    <canvas id="sky" aria-hidden="true"></canvas>
-    <div class="vignette" aria-hidden="true"></div>
-    <div class="grain" aria-hidden="true"></div>
+  <body {...stylex.attrs(styles.body)}>
+    <canvas id="hyperion" {...stylex.attrs(styles.canvas)} aria-hidden="true"></canvas>
+    <div {...stylex.attrs(styles.fixedAtmosphere, styles.aurora)} aria-hidden="true"></div>
+    <div {...stylex.attrs(styles.fixedAtmosphere, styles.vignette)} aria-hidden="true"></div>
+    <div {...stylex.attrs(styles.fixedAtmosphere, styles.grain)} aria-hidden="true"></div>
 
-    <main>
-      <header class="topbar">
-        <span class="mark reveal">krmznkr</span>
-        <span class="place reveal">Open source · privacy-minded</span>
-      </header>
+    <main {...stylex.attrs(styles.main)}>
+      <aside {...stylex.attrs(styles.sceneMeta)}>
+        <span>Hyperion</span>
+        <span {...stylex.attrs(styles.sceneCredit)}>Model by Sir Topham Hatt</span>
+      </aside>
 
-      <div class="bottom">
-        <section class="intro">
-          <p class="kicker reveal">Hey — my name is</p>
-          <h1 class="reveal">krmznkr</h1>
-          <p class="lede reveal">
-            I'm a full-stack software engineer building calm, careful software
-            in the open.
+      <div {...stylex.attrs(styles.bottom)}>
+        <section {...stylex.attrs(styles.intro)}>
+          <h1 {...stylex.attrs(styles.heading)}>krmznkr</h1>
+          <p {...stylex.attrs(styles.lede)}>
+            Full-stack software engineer.
           </p>
 
-          <nav class="links reveal" aria-label="Elsewhere">
+          <nav {...stylex.attrs(styles.links)} aria-label="Projects and code">
             {
               links.map((l) => (
                 <a
                   href={l.href}
-                  rel="me noopener"
+                  rel={l.label === 'GitHub' ? 'me noopener' : 'noopener'}
                   target="_blank"
                   data-analytics-destination={l.label.toLowerCase()}
+                  class:list={['link', stylex.attrs(styles.link).class]}
                 >
                   <span>{l.label}</span>
-                  <svg viewBox="0 0 12 12" width="11" height="11" aria-hidden="true">
+                  <svg class:list={['link-icon', stylex.attrs(styles.linkIcon).class]} viewBox="0 0 12 12" width="11" height="11" aria-hidden="true">
                     <path d="M3 9L9 3M9 3H4M9 3V8" stroke="currentColor" stroke-width="1.1" fill="none" stroke-linecap="square" />
                   </svg>
                 </a>
@@ -85,23 +89,26 @@ const links = [
           </nav>
         </section>
 
-        <footer class="footer reveal">
-          <span>Open source</span>
-          <span class="sep" aria-hidden="true">/</span>
+        <footer {...stylex.attrs(styles.footer)}>
           <a
             href="https://github.com/krmznkr/me"
             rel="noopener"
             target="_blank"
             data-analytics-destination="source"
-          >this page</a>
+            {...stylex.attrs(styles.footerLink)}
+          >Source code</a>
         </footer>
       </div>
+
+      <button class:list={['motion-control', stylex.attrs(styles.motionControl).class]} type="button" aria-pressed="false" disabled>
+        <span class:list={['motion-icon', stylex.attrs(styles.motionIcon).class]} aria-hidden="true"></span>
+        <span class="motion-label">Pause animation</span>
+      </button>
     </main>
 
     <script>
       import '../scripts/sentry'
       import { capturePostHogEvent } from '../scripts/posthog'
-      import { startNocturne } from '../scripts/nocturne'
       document.addEventListener('click', (event) => {
         const target = event.target
         if (!(target instanceof Element)) return
@@ -113,253 +120,23 @@ const links = [
           destination: link.dataset.analyticsDestination,
         })
       })
-      const canvas = document.getElementById('sky') as HTMLCanvasElement | null
-      if (canvas) startNocturne(canvas)
-      requestAnimationFrame(() =>
-        requestAnimationFrame(() =>
-          document.documentElement.classList.add('ready'),
-        ),
-      )
+      const canvas = document.getElementById('hyperion') as HTMLCanvasElement | null
+      const motionControl = document.querySelector<HTMLButtonElement>('.motion-control')
+      if (canvas) {
+        import('../scripts/hyperion').then(({ startHyperion }) => startHyperion(canvas)).then((scene) => {
+          if (motionControl) motionControl.disabled = false
+          motionControl?.addEventListener('click', () => {
+            const paused = scene.toggleMotion()
+            motionControl.setAttribute('aria-pressed', String(paused))
+            const label = motionControl.querySelector('.motion-label')
+            if (label) label.textContent = paused ? 'Resume animation' : 'Pause animation'
+          })
+        }).catch((error) => {
+          console.error('Hyperion scene failed to load', error)
+          document.documentElement.classList.add('scene-error')
+        })
+      }
     </script>
 
-    <style is:global>
-      :root {
-        --bg: #060608;
-        --ink: #edecea;
-        --soft: #b9b8bd;
-        --muted: #83838c;
-        --faint: #4c4c55;
-        --line: rgba(237, 236, 234, 0.14);
-        --sans: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
-        --mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
-        color-scheme: dark;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-      }
-      body {
-        background: var(--bg);
-        color: var(--ink);
-        font-family: var(--sans);
-        -webkit-font-smoothing: antialiased;
-        text-rendering: optimizeLegibility;
-        overflow: hidden;
-        min-height: 100dvh;
-      }
-
-      #sky {
-        position: fixed;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        display: block;
-        z-index: 0;
-      }
-
-      /* Draw the eye down-left and deepen the corners. */
-      .vignette {
-        position: fixed;
-        inset: 0;
-        z-index: 1;
-        pointer-events: none;
-        background: radial-gradient(
-          130% 110% at 62% 30%,
-          transparent 48%,
-          rgba(0, 0, 0, 0.55) 100%
-        );
-      }
-      /* A whisper of film grain for texture. */
-      .grain {
-        position: fixed;
-        inset: -50%;
-        z-index: 1;
-        pointer-events: none;
-        opacity: 0.035;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
-      }
-
-      main {
-        position: relative;
-        z-index: 2;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        min-height: 100dvh;
-        padding: clamp(1.4rem, 3.5vw, 3.25rem);
-        padding-top: max(clamp(1.4rem, 3.5vw, 3.25rem), env(safe-area-inset-top));
-        padding-bottom: max(clamp(1.4rem, 3.5vw, 3.25rem), env(safe-area-inset-bottom));
-      }
-
-      .topbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: baseline;
-        font-family: var(--mono);
-        font-size: 0.72rem;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-      }
-      .mark {
-        color: var(--ink);
-      }
-      .place {
-        color: var(--faint);
-      }
-
-      .bottom {
-        display: flex;
-        flex-direction: column;
-        gap: clamp(2rem, 5vh, 3.5rem);
-      }
-
-      .intro {
-        max-width: 40rem;
-      }
-
-      .kicker {
-        margin: 0 0 1.1rem;
-        font-family: var(--mono);
-        font-size: clamp(0.72rem, 1.6vw, 0.82rem);
-        letter-spacing: 0.22em;
-        text-transform: uppercase;
-        color: var(--muted);
-      }
-
-      h1 {
-        margin: 0;
-        font-family: var(--sans);
-        font-weight: 600;
-        line-height: 0.95;
-        letter-spacing: -0.035em;
-        font-size: clamp(2.7rem, 9vw, 5rem);
-        color: #f6f5f3;
-      }
-
-      .lede {
-        margin: 1.5rem 0 0;
-        max-width: 40ch;
-        font-size: clamp(1rem, 2.3vw, 1.2rem);
-        line-height: 1.62;
-        color: var(--soft);
-        font-weight: 350;
-      }
-
-      .links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1.6rem;
-        margin-top: 2.4rem;
-        font-family: var(--mono);
-        font-size: 0.8rem;
-        letter-spacing: 0.04em;
-      }
-      .links a {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5em;
-        color: var(--soft);
-        text-decoration: none;
-        padding-bottom: 0.35em;
-        border-bottom: 1px solid transparent;
-        transition:
-          color 0.3s ease,
-          border-color 0.3s ease;
-      }
-      .links a svg {
-        color: var(--faint);
-        transition:
-          transform 0.3s ease,
-          color 0.3s ease;
-      }
-      .links a:hover,
-      .links a:focus-visible {
-        color: var(--ink);
-        border-color: var(--line);
-        outline: none;
-      }
-      .links a:hover svg,
-      .links a:focus-visible svg {
-        color: var(--ink);
-        transform: translate(2px, -2px);
-      }
-
-      .footer {
-        display: flex;
-        align-items: center;
-        gap: 0.7em;
-        font-family: var(--mono);
-        font-size: 0.7rem;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-        color: var(--faint);
-      }
-      .footer a {
-        color: var(--muted);
-        text-decoration: none;
-        border-bottom: 1px solid transparent;
-        transition: color 0.3s ease, border-color 0.3s ease;
-      }
-      .footer a:hover {
-        color: var(--ink);
-        border-color: var(--line);
-      }
-      .sep {
-        color: var(--faint);
-      }
-
-      /* Staggered reveal. The hidden start state lives in render-blocking CSS
-         so content never paints visible and then flashes hidden. A <noscript>
-         override below keeps everything visible when JS is unavailable. */
-      html.js .reveal {
-        opacity: 0;
-        transform: translateY(14px);
-        transition:
-          opacity 0.95s cubic-bezier(0.2, 0.65, 0.2, 1),
-          transform 0.95s cubic-bezier(0.2, 0.65, 0.2, 1);
-      }
-      html.js.ready .reveal {
-        opacity: 1;
-        transform: none;
-      }
-      html.js .topbar .reveal {
-        transition-delay: 0.05s;
-      }
-      html.js .kicker.reveal {
-        transition-delay: 0.35s;
-      }
-      html.js h1.reveal {
-        transition-delay: 0.46s;
-      }
-      html.js .lede.reveal {
-        transition-delay: 0.6s;
-      }
-      html.js .links.reveal {
-        transition-delay: 0.76s;
-      }
-      html.js .footer.reveal {
-        transition-delay: 0.9s;
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        html.js .reveal {
-          opacity: 1 !important;
-          transform: none !important;
-          transition: none !important;
-        }
-      }
-
-      @media (max-width: 460px) {
-        .place {
-          display: none;
-        }
-      }
-    </style>
   </body>
 </html>

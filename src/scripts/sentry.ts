@@ -10,7 +10,7 @@ function pathOnly(value: string | undefined): string | undefined {
   }
 }
 
-if (import.meta.env.PROD) {
+if ((import.meta.env.PROD && import.meta.env.MODE !== 'preview')) {
   Sentry.init({
     dsn: 'https://e0ff242475ead4c302e8c1d4ea0dce6a@o4511769287000064.ingest.de.sentry.io/4511769331957840',
     environment: import.meta.env.MODE,
