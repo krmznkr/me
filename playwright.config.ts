@@ -22,7 +22,9 @@ export default defineConfig({
     { name: 'ultrawide', use: { viewport: { width: 2560, height: 1080 } } },
   ],
   webServer: {
-    command: 'pnpm preview:browser',
+    // Astro backgrounds `preview` when it detects a coding agent, which
+    // Playwright reads as an early exit; --ignore-lock keeps it foreground.
+    command: 'pnpm preview:browser --ignore-lock',
     url: 'http://127.0.0.1:4321',
     reuseExistingServer: !process.env.CI,
   },
