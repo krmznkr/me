@@ -41,13 +41,13 @@ The project token in `src/scripts/posthog.ts` is a public ingestion identifier.
 The personal API key is secret and must never be committed or copied into GitHub
 Actions. Sentry remains the error tracker and source-map destination.
 
-Me records `outbound_link_clicked` for the four explicitly tagged external
-links. It sends only a static `destination` label: `github`, `julian`, `life`,
-or `source`. Link text and destination URLs are not captured as custom
+Me records `outbound_link_clicked` for the three explicitly tagged external
+links. It sends only a static `destination` label: `github`, `julian`, or
+`source`. Link text and destination URLs are not captured as custom
 properties. The shared
 [Apps · Traffic & Engagement dashboard](https://eu.posthog.com/project/228794/dashboard/836241)
 shows rolling 30-day pageviews, sanitized paths, referrers, and key interactions
-for all three apps. Every query is restricted to `environment=production` and
+for Julian and Me. Every query is restricted to `environment=production` and
 can be narrowed with the `app` property. Because persistence is disabled, the
 dashboard intentionally avoids stable-user and unique-visitor metrics.
 
@@ -63,7 +63,7 @@ its commits, generates hidden source maps, uploads an artifact bundle, and
 deletes the map files from `dist` before Cloudflare deployment. Local builds do
 not upload anything because they do not normally receive the token.
 
-The Sentry GitHub App is installed only for the `julian`, `life`, and `me`
+The Sentry GitHub App is installed only for the `julian` and `me`
 repositories. The PostHog EU GitHub App has the same repository restriction.
 
 ## CLI access
@@ -116,7 +116,7 @@ read -rs "sentry_token_value?New Sentry token: "
 echo
 op item edit "Sentry (krmznkr)" --vault Private \
   "token[password]=$sentry_token_value" >/dev/null
-for repository in julian life me; do
+for repository in julian me; do
   printf %s "$sentry_token_value" | \
     gh secret set SENTRY_AUTH_TOKEN --repo "krmznkr/$repository"
 done

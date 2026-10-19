@@ -24,7 +24,6 @@ test('homepage renders its model, links and motion control without overflow or t
   for (const [name, url] of [
     ['GitHub', 'https://github.com/krmznkr'],
     ['Julian', 'https://julian.krmznkr.com'],
-    ['Life', 'https://life.krmznkr.com'],
     ['Source code', 'https://github.com/krmznkr/me'],
   ]) {
     await expect(page.getByRole('link', { name, exact: true })).toHaveAttribute('href', url)

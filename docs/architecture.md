@@ -15,7 +15,7 @@ flowchart LR
   hyperion["Hyperion WebGL renderer"]
   sentry["Sentry EU"]
   posthog["PostHog EU"]
-  external["GitHub · Julian · Life"]
+  external["GitHub · Julian"]
 
   visitor -->|"HTTPS"| edge --> html
   html --> hyperion
@@ -146,7 +146,7 @@ feature flags disabled. Current and referrer URLs are reduced to origin plus
 pathname.
 
 The only custom event is `outbound_link_clicked`. It sends one static
-`destination` label (`github`, `julian`, `life`, or `source`) from an explicitly
+`destination` label (`github`, `julian`, or `source`) from an explicitly
 tagged anchor; it does not send link text or URL as a custom property. See
 [`observability.md`](observability.md) for the complete controls and runbooks.
 
