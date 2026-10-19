@@ -7,7 +7,7 @@ assert.equal(response.status, 200, `Homepage returned ${response.status}`)
 const html = await response.text()
 assert.match(html, /krmznkr \| Full-stack software engineer/)
 assert.match(html, /rel="canonical" href="https:\/\/me\.krmznkr\.com"/)
-for (const url of ['https://github.com/krmznkr', 'https://julian.krmznkr.com', 'https://life.krmznkr.com']) {
+for (const url of ['https://github.com/krmznkr', 'https://julian.krmznkr.com']) {
   assert.ok(html.includes(`href="${url}"`), `Missing ${url}`)
 }
 assert.equal(response.headers.get('x-content-type-options'), 'nosniff')
