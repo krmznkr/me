@@ -22,7 +22,7 @@
     "@stylexjs/stylex": "0.19.0",
     "astro": "^7.2.8",
     "posthog-js": "^1.438.12",
-    "three": "^0.180.0"
+    "three": "^0.186.1"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
