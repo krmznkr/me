@@ -82,8 +82,9 @@ pnpm build
 On a newly provisioned Linux host, Playwright may need its documented browser
 system dependencies: `pnpm exec playwright install --with-deps chromium`.
 Keep Node 24.15.0 and pnpm 10.33.0 aligned with CI; `packageManager` and
-`engines` record the versions. There is no OAuth or Cloudflare secret required
-for local checks or visual review.
+`engines` record the versions. `@types/node` stays on the runtime's major:
+Dependabot ignores its major bumps, so raise it together with Node. There is
+no OAuth or Cloudflare secret required for local checks or visual review.
 
 For a local built preview, run `pnpm build:preview && pnpm preview:browser`.
 In T3 Code, open the collaborative browser with the environment port **4321**;
