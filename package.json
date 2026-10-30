@@ -20,8 +20,8 @@
     "@fontsource-variable/geist-mono": "^5.2.8",
     "@sentry/browser": "^10.66.0",
     "@stylexjs/stylex": "0.19.1",
-    "astro": "^7.2.8",
-    "posthog-js": "^1.438.12",
+    "astro": "^7.4.2",
+    "posthog-js": "^1.438.24",
     "three": "^0.186.1"
   },
   "devDependencies": {
@@ -29,10 +29,10 @@
     "@playwright/test": "1.64.1",
     "@sentry/vite-plugin": "^11.9.0",
     "@stylexjs/unplugin": "0.19.1",
-    "@types/node": "24.10.0",
-    "@types/three": "^0.180.0",
+    "@types/node": "24.19.2",
+    "@types/three": "^0.186.0",
     "typescript": "^6.0.3",
-    "wrangler": "^4.112.0"
+    "wrangler": "^4.153.0"
   },
   "packageManager": "pnpm@10.33.0",
   "engines": {
