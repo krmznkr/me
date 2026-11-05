@@ -32,7 +32,7 @@
     "@types/node": "24.19.2",
     "@types/three": "^0.186.0",
     "typescript": "^6.0.3",
-    "wrangler": "^4.153.0"
+    "wrangler": "^4.156.1"
   },
   "packageManager": "pnpm@10.33.0",
   "engines": {
