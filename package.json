@@ -22,7 +22,7 @@
     "@stylexjs/stylex": "0.19.1",
     "astro": "^7.4.2",
     "posthog-js": "^1.438.24",
-    "three": "^0.186.1"
+    "three": "^0.187.0"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
@@ -30,7 +30,7 @@
     "@sentry/vite-plugin": "^11.9.0",
     "@stylexjs/unplugin": "0.19.1",
     "@types/node": "24.19.2",
-    "@types/three": "^0.186.0",
+    "@types/three": "^0.187.0",
     "typescript": "^6.0.3",
     "wrangler": "^4.153.0"
   },
