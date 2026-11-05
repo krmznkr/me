@@ -49,6 +49,11 @@ Check that the ship retains readable depth, stays clear of the hero copy, fits
 without horizontal overflow, and leaves every link as an ordinary semantic
 anchor. Verify pointer parallax, drag rotation, and the pause control.
 
+The browser Sentry SDK stays pinned to 10.76.2: v11 removes the PII and
+span fields used by our scrubber (Dependabot #49 fails type checking).
+Migrate and validate the privacy boundary before raising that major. The
+Sentry build plugin has its own version and can update independently.
+
 ## Privacy boundary
 
 The site contains public copy and links only. Never add credentials or private
