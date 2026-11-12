@@ -20,7 +20,7 @@
     "@fontsource-variable/geist-mono": "^5.2.8",
     "@sentry/browser": "10.76.2",
     "@stylexjs/stylex": "0.19.1",
-    "astro": "^7.4.2",
+    "astro": "^7.4.7",
     "posthog-js": "^1.444.0",
     "three": "^0.187.0"
   },
