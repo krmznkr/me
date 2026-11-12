@@ -49,10 +49,17 @@ Check that the ship retains readable depth, stays clear of the hero copy, fits
 without horizontal overflow, and leaves every link as an ordinary semantic
 anchor. Verify pointer parallax, drag rotation, and the pause control.
 
-The browser Sentry SDK stays pinned to 10.76.2: v11 removes the PII and
-span fields used by our scrubber (Dependabot #49 fails type checking).
+The browser Sentry SDK stays pinned to an exact 10.x release (now 10.78.0):
+v11 removes the PII and span fields used by our scrubber (Dependabot #49
+fails type checking).
 Migrate and validate the privacy boundary before raising that major. The
 Sentry build plugin has its own version and can update independently.
+
+`@emnapi/runtime` is a direct dev dependency at 1.11.3 only to fix the peer
+that `astro check` loads. Without it pnpm resolves `@astrojs/astro2tsx` to the
+2.0 beta pulled in by Astro 7.4.7+, and `astro check` fails to load
+(`this.bridge.setLastError is not a function`; Dependabot #53 reported it as
+missing `@astrojs/check`).
 
 ## Privacy boundary
 
